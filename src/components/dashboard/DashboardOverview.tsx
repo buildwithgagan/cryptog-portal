@@ -18,6 +18,7 @@ import {
   Bar,
   Legend,
 } from "recharts";
+import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 
 interface DashboardOverviewProps {
   monthlyData: any[];
@@ -71,158 +72,181 @@ const DashboardOverview = ({
           description="User growth & revenue metrics"
         />
         
-        <div className="h-80">
-          <Tabs 
-            value={chartView} 
-            onValueChange={setChartView}
-            className="w-full"
-          >
-            <TabsList className="w-full max-w-md mb-4">
-              <TabsTrigger value="combined" className="flex-1">
-                <LineChart size={14} className="mr-1.5" />
-                Combined
-              </TabsTrigger>
-              <TabsTrigger value="users" className="flex-1">
-                <Users size={14} className="mr-1.5" />
-                Users
-              </TabsTrigger>
-              <TabsTrigger value="revenue" className="flex-1">
-                <DollarSign size={14} className="mr-1.5" />
-                Revenue
-              </TabsTrigger>
-            </TabsList>
-              
-            {isLoading ? (
-              <div className="w-full h-full flex items-center justify-center">
-                <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
-              </div>
-            ) : (
-              <>
-                <TabsContent value="combined" className="m-0 p-0 h-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsAreaChart data={monthlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                        </linearGradient>
-                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis 
-                        dataKey="name" 
-                        stroke="hsl(var(--muted-foreground))" 
-                      />
-                      <YAxis 
-                        stroke="hsl(var(--muted-foreground))" 
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          borderColor: "hsl(var(--border))",
-                          borderRadius: "var(--radius)",
-                        }}
-                      />
-                      <Legend />
-                      <Area
-                        type="monotone"
-                        dataKey="users"
-                        name="Users"
-                        stroke="hsl(var(--primary))"
-                        fillOpacity={1}
-                        fill="url(#colorUsers)"
-                      />
-                      <Area
-                        type="monotone"
-                        dataKey="revenue"
-                        name="Revenue"
-                        stroke="#22c55e"
-                        fillOpacity={1}
-                        fill="url(#colorRevenue)"
-                      />
-                    </RechartsAreaChart>
-                  </ResponsiveContainer>
-                </TabsContent>
+        <Tabs 
+          value={chartView} 
+          onValueChange={setChartView}
+          className="w-full"
+        >
+          <TabsList className="w-full max-w-md mb-4">
+            <TabsTrigger value="combined" className="flex-1">
+              <LineChart size={14} className="mr-1.5" />
+              Combined
+            </TabsTrigger>
+            <TabsTrigger value="users" className="flex-1">
+              <Users size={14} className="mr-1.5" />
+              Users
+            </TabsTrigger>
+            <TabsTrigger value="revenue" className="flex-1">
+              <DollarSign size={14} className="mr-1.5" />
+              Revenue
+            </TabsTrigger>
+          </TabsList>
+            
+          {isLoading ? (
+            <div className="w-full h-64 flex items-center justify-center">
+              <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
+            </div>
+          ) : (
+            <div className="h-80">
+              <TabsContent value="combined" className="mt-0">
+                <ChartContainer 
+                  className="h-full" 
+                  config={{
+                    users: {
+                      label: "Users",
+                      color: "hsl(var(--primary))",
+                    },
+                    revenue: {
+                      label: "Revenue",
+                      color: "#22c55e",
+                    },
+                  }}
+                >
+                  <RechartsAreaChart data={monthlyData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <defs>
+                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                      </linearGradient>
+                      <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <ChartTooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <ChartTooltipContent
+                              className="border-border/50 shadow-xl"
+                              payload={payload}
+                            />
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="users"
+                      name="users"
+                      stroke="hsl(var(--primary))"
+                      fillOpacity={1}
+                      fill="url(#colorUsers)"
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="revenue"
+                      name="revenue"
+                      stroke="#22c55e"
+                      fillOpacity={1}
+                      fill="url(#colorRevenue)"
+                    />
+                    <Legend />
+                  </RechartsAreaChart>
+                </ChartContainer>
+              </TabsContent>
 
-                <TabsContent value="users" className="m-0 p-0 h-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsAreaChart data={monthlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis 
-                        dataKey="name" 
-                        stroke="hsl(var(--muted-foreground))" 
-                      />
-                      <YAxis 
-                        stroke="hsl(var(--muted-foreground))" 
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          borderColor: "hsl(var(--border))",
-                          borderRadius: "var(--radius)",
-                        }}
-                      />
-                      <Legend />
-                      <Area
-                        type="monotone"
-                        dataKey="users"
-                        name="Users"
-                        stroke="hsl(var(--primary))"
-                        fillOpacity={1}
-                        fill="url(#colorUsers)"
-                      />
-                    </RechartsAreaChart>
-                  </ResponsiveContainer>
-                </TabsContent>
+              <TabsContent value="users" className="mt-0">
+                <ChartContainer 
+                  className="h-full" 
+                  config={{
+                    users: {
+                      label: "Users",
+                      color: "hsl(var(--primary))",
+                    },
+                  }}
+                >
+                  <RechartsAreaChart data={monthlyData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <defs>
+                      <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="hsl(var(--primary))" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="hsl(var(--primary))" stopOpacity={0} />
+                      </linearGradient>
+                    </defs>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <ChartTooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <ChartTooltipContent
+                              className="border-border/50 shadow-xl"
+                              payload={payload}
+                            />
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Area
+                      type="monotone"
+                      dataKey="users"
+                      name="users"
+                      stroke="hsl(var(--primary))"
+                      fillOpacity={1}
+                      fill="url(#colorUsers)"
+                    />
+                    <Legend />
+                  </RechartsAreaChart>
+                </ChartContainer>
+              </TabsContent>
 
-                <TabsContent value="revenue" className="m-0 p-0 h-full">
-                  <ResponsiveContainer width="100%" height="100%">
-                    <RechartsBarChart data={monthlyData} margin={{ top: 10, right: 10, left: 0, bottom: 0 }}>
-                      <defs>
-                        <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="5%" stopColor="#22c55e" stopOpacity={0.2} />
-                          <stop offset="95%" stopColor="#22c55e" stopOpacity={0} />
-                        </linearGradient>
-                      </defs>
-                      <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
-                      <XAxis 
-                        dataKey="name" 
-                        stroke="hsl(var(--muted-foreground))" 
-                      />
-                      <YAxis 
-                        stroke="hsl(var(--muted-foreground))" 
-                      />
-                      <Tooltip
-                        contentStyle={{
-                          backgroundColor: "hsl(var(--card))",
-                          borderColor: "hsl(var(--border))",
-                          borderRadius: "var(--radius)",
-                        }}
-                      />
-                      <Legend />
-                      <Bar 
-                        dataKey="revenue" 
-                        name="Revenue" 
-                        fill="url(#colorRevenue)" 
-                        radius={[4, 4, 0, 0]} 
-                        barSize={30}
-                      />
-                    </RechartsBarChart>
-                  </ResponsiveContainer>
-                </TabsContent>
-              </>
-            )}
-          </Tabs>
-        </div>
+              <TabsContent value="revenue" className="mt-0">
+                <ChartContainer 
+                  className="h-full" 
+                  config={{
+                    revenue: {
+                      label: "Revenue",
+                      color: "#22c55e",
+                    },
+                  }}
+                >
+                  <RechartsBarChart data={monthlyData} margin={{ top: 20, right: 20, bottom: 20, left: 20 }}>
+                    <CartesianGrid strokeDasharray="3 3" stroke="hsl(var(--border))" />
+                    <XAxis dataKey="name" stroke="hsl(var(--muted-foreground))" />
+                    <YAxis stroke="hsl(var(--muted-foreground))" />
+                    <ChartTooltip
+                      content={({ active, payload }) => {
+                        if (active && payload && payload.length) {
+                          return (
+                            <ChartTooltipContent
+                              className="border-border/50 shadow-xl"
+                              payload={payload}
+                            />
+                          );
+                        }
+                        return null;
+                      }}
+                    />
+                    <Bar 
+                      dataKey="revenue" 
+                      name="revenue" 
+                      fill="#22c55e" 
+                      radius={[4, 4, 0, 0]} 
+                      barSize={30}
+                    />
+                    <Legend />
+                  </RechartsBarChart>
+                </ChartContainer>
+              </TabsContent>
+            </div>
+          )}
+        </Tabs>
       </Card>
 
       {/* Recent Transactions */}
