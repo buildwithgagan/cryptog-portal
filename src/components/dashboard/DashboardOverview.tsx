@@ -66,14 +66,11 @@ const DashboardOverview = ({
 
       {/* Chart Section */}
       <Card className="p-5">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
-          <SectionHeading 
-            title="Performance Overview" 
-            description="User growth & revenue metrics" 
-            className="mb-0"
-          />
-          
-          <div className="flex mt-2 sm:mt-0">
+        <h2 className="text-xl font-semibold mb-1">Performance Overview</h2>
+        <p className="text-sm text-muted-foreground mb-4">User growth & revenue metrics</p>
+        
+        <div className="flex flex-col sm:flex-row justify-end items-start mb-4">
+          <div className="flex w-full sm:w-auto mt-2 sm:mt-0">
             <Tabs 
               value={chartView} 
               onValueChange={setChartView}
