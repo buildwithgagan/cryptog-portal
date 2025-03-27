@@ -66,18 +66,18 @@ const DashboardOverview = ({
 
       {/* Chart Section */}
       <Card className="p-5">
-        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-6">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center mb-4">
           <SectionHeading 
             title="Performance Overview" 
             description="User growth & revenue metrics" 
             className="mb-0"
           />
           
-          <div className="flex space-x-2 mt-2 sm:mt-0">
+          <div className="flex mt-2 sm:mt-0">
             <Tabs 
               value={chartView} 
               onValueChange={setChartView}
-              className="w-full sm:w-auto"
+              className="w-full"
             >
               <TabsList className="w-full">
                 <TabsTrigger value="combined" className="flex-1">
@@ -94,16 +94,16 @@ const DashboardOverview = ({
                 </TabsTrigger>
               </TabsList>
               
-              <div className="w-full h-80">
+              <div className="w-full h-80 mt-2">
                 {isLoading ? (
                   <div className="w-full h-full flex items-center justify-center">
                     <Loader2 className="w-8 h-8 animate-spin text-muted-foreground" />
                   </div>
                 ) : (
                   <>
-                    <TabsContent value="combined" className="mt-0 h-full">
+                    <TabsContent value="combined" className="m-0 p-0 h-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <RechartsAreaChart data={monthlyData} margin={{ top: 20, right: 20, left: 10, bottom: 10 }}>
+                        <RechartsAreaChart data={monthlyData} margin={{ top: 20, right: 5, left: 0, bottom: 0 }}>
                           <defs>
                             <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                               <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8} />
@@ -121,7 +121,7 @@ const DashboardOverview = ({
                             fontSize={12}
                             axisLine={false}
                             tickLine={false}
-                            padding={{ left: 10, right: 10 }}
+                            padding={{ left: 0, right: 0 }}
                           />
                           <YAxis 
                             stroke="hsl(var(--muted-foreground))" 
@@ -170,9 +170,9 @@ const DashboardOverview = ({
                       </ResponsiveContainer>
                     </TabsContent>
 
-                    <TabsContent value="users" className="mt-0 h-full">
+                    <TabsContent value="users" className="m-0 p-0 h-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <RechartsAreaChart data={monthlyData} margin={{ top: 20, right: 20, left: 10, bottom: 10 }}>
+                        <RechartsAreaChart data={monthlyData} margin={{ top: 20, right: 5, left: 0, bottom: 0 }}>
                           <defs>
                             <linearGradient id="colorUsers" x1="0" y1="0" x2="0" y2="1">
                               <stop offset="5%" stopColor="#6366f1" stopOpacity={0.8} />
@@ -186,7 +186,7 @@ const DashboardOverview = ({
                             fontSize={12}
                             axisLine={false}
                             tickLine={false}
-                            padding={{ left: 10, right: 10 }}
+                            padding={{ left: 0, right: 0 }}
                           />
                           <YAxis 
                             stroke="hsl(var(--muted-foreground))" 
@@ -220,9 +220,9 @@ const DashboardOverview = ({
                       </ResponsiveContainer>
                     </TabsContent>
 
-                    <TabsContent value="revenue" className="mt-0 h-full">
+                    <TabsContent value="revenue" className="m-0 p-0 h-full">
                       <ResponsiveContainer width="100%" height="100%">
-                        <RechartsBarChart data={monthlyData} margin={{ top: 20, right: 20, left: 10, bottom: 10 }}>
+                        <RechartsBarChart data={monthlyData} margin={{ top: 20, right: 5, left: 0, bottom: 0 }}>
                           <defs>
                             <linearGradient id="colorRevenue" x1="0" y1="0" x2="0" y2="1">
                               <stop offset="5%" stopColor="#10b981" stopOpacity={0.8} />
@@ -236,7 +236,7 @@ const DashboardOverview = ({
                             fontSize={12}
                             axisLine={false}
                             tickLine={false}
-                            padding={{ left: 10, right: 10 }}
+                            padding={{ left: 0, right: 0 }}
                           />
                           <YAxis 
                             stroke="hsl(var(--muted-foreground))" 
