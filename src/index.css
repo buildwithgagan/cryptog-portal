@@ -112,3 +112,20 @@
 .stat-card {
   @apply p-5 rounded-lg border bg-card text-card-foreground shadow-sm;
 }
+
+/* Enhanced chart styles */
+.recharts-tooltip-cursor {
+  @apply opacity-20;
+}
+
+.recharts-default-tooltip {
+  @apply border border-border shadow-lg !important;
+}
+
+.recharts-cartesian-axis-tick-value {
+  @apply fill-muted-foreground text-xs;
+}
+
+.recharts-legend-item-text {
+  @apply text-xs;
+}

@@ -1,262 +1,183 @@
 
 import { Card } from "@/components/ui/card";
-import StatCard from "@/components/shared/StatCard";
+import { Progress } from "@/components/ui/progress"; 
+import { Compass, CreditCard, DollarSign, Globe, MapPin, Users } from "lucide-react";
 import SectionHeading from "@/components/shared/SectionHeading";
-import { BadgeDollarSign, Coins, Users, Globe2 } from "lucide-react";
-import { Progress } from "@/components/ui/progress";
+import StatCard from "@/components/shared/StatCard";
 import {
   ResponsiveContainer,
-  PieChart,
-  Pie,
+  BarChart,
+  Bar,
   Cell,
+  XAxis,
+  YAxis,
+  CartesianGrid,
   Tooltip,
   Legend,
+  PieChart,
+  Pie,
 } from "recharts";
 
-const tokenData = [
-  { name: "Pre-Sale", value: 200000000 },
-  { name: "Public Sale", value: 300000000 },
-  { name: "Team", value: 150000000 },
-  { name: "Reserves", value: 200000000 },
-  { name: "Ecosystem", value: 150000000 },
+// Sample data for the ICO page
+const tokenData = {
+  name: "Cryptog",
+  decimals: 18,
+  totalSupply: "1,000,000,000",
+  preSaleSold: "250,000,000",
+  currentPrice: "$0.085",
+  percentageSold: 25, // 25% of total supply
+};
+
+// Sample data for the country distribution
+const countryData = [
+  { name: "United States", value: 32.4 },
+  { name: "India", value: 18.7 },
+  { name: "United Kingdom", value: 15.2 },
+  { name: "Germany", value: 8.6 },
+  { name: "Canada", value: 7.3 },
+  { name: "Australia", value: 6.5 },
+  { name: "Others", value: 11.3 },
 ];
 
-const COLORS = ['hsl(var(--primary))', '#22c55e', '#f59e0b', '#3b82f6', '#a855f7'];
-
-const locationData = [
-  { country: "United States", users: 2850, percentage: 28.5 },
-  { country: "United Kingdom", users: 1450, percentage: 14.5 },
-  { country: "India", users: 1250, percentage: 12.5 },
-  { country: "Germany", users: 920, percentage: 9.2 },
-  { country: "Canada", users: 780, percentage: 7.8 },
-  { country: "Australia", users: 650, percentage: 6.5 },
-  { country: "France", users: 520, percentage: 5.2 },
-  { country: "Japan", users: 480, percentage: 4.8 },
-  { country: "Brazil", users: 420, percentage: 4.2 },
-  { country: "Others", users: 680, percentage: 6.8 },
-];
+// Colors for the pie chart
+const COLORS = ['#6366f1', '#10b981', '#3b82f6', '#f59e0b', '#ef4444', '#8b5cf6', '#ec4899'];
 
 const DashboardICO = () => {
-  const totalSupply = 1000000000;
-  const tokensSold = 385000000;
-  const percentageSold = (tokensSold / totalSupply) * 100;
-
   return (
     <div className="space-y-6">
       {/* Stats Section */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-5">
         <StatCard
           title="Token Price"
-          value="$0.075"
-          icon={BadgeDollarSign}
-          trend={{ value: 8.2, isPositive: true }}
-        />
-        <StatCard
-          title="Tokens Sold"
-          value="385M"
-          icon={Coins}
-          trend={{ value: 15.3, isPositive: true }}
+          value={tokenData.currentPrice}
+          icon={DollarSign}
+          trend={{ value: 3.2, isPositive: true }}
         />
         <StatCard
           title="Total Investors"
-          value="5,280"
+          value="2,845"
           icon={Users}
-          trend={{ value: 12.1, isPositive: true }}
+          trend={{ value: 7.5, isPositive: true }}
+        />
+        <StatCard
+          title="Pre-Sale Tokens"
+          value={tokenData.preSaleSold}
+          icon={CreditCard}
+          trend={{ value: 4.6, isPositive: true }}
         />
         <StatCard
           title="Countries"
           value="42"
-          icon={Globe2}
-          trend={{ value: 4.3, isPositive: true }}
+          icon={Globe}
+          trend={{ value: 2.1, isPositive: true }}
         />
       </div>
 
       {/* Token Info Section */}
       <Card className="p-5">
         <SectionHeading 
-          title="Token Information" 
-          description="Cryptog token details and statistics"
+          title="Token Details" 
+          description="Information about the Cryptog token"
         />
         
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
           <div className="space-y-5">
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Token Name</p>
-              <p className="text-lg font-semibold">Cryptog Token (CRYP)</p>
+              <h4 className="text-sm font-medium text-muted-foreground mb-1">Token Name</h4>
+              <p className="text-lg font-semibold">{tokenData.name}</p>
             </div>
             
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Decimals</p>
-              <p className="text-lg font-semibold">18</p>
+              <h4 className="text-sm font-medium text-muted-foreground mb-1">Decimals</h4>
+              <p className="text-lg font-semibold">{tokenData.decimals}</p>
             </div>
             
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Total Supply</p>
-              <p className="text-lg font-semibold">1,000,000,000 CRYP</p>
+              <h4 className="text-sm font-medium text-muted-foreground mb-1">Total Supply</h4>
+              <p className="text-lg font-semibold">{tokenData.totalSupply}</p>
             </div>
             
             <div>
-              <p className="text-sm font-medium text-muted-foreground mb-1">Token Sale Progress</p>
-              <div className="space-y-2">
-                <Progress value={percentageSold} className="h-2" />
-                <div className="flex justify-between text-sm">
-                  <span>{tokensSold.toLocaleString()} CRYP</span>
-                  <span>{percentageSold.toFixed(1)}% of total supply</span>
-                </div>
-              </div>
+              <h4 className="text-sm font-medium text-muted-foreground mb-1">Current Price</h4>
+              <p className="text-lg font-semibold">{tokenData.currentPrice}</p>
             </div>
           </div>
           
-          <div className="h-64">
-            <p className="text-sm font-medium mb-2">Token Allocation</p>
+          <div className="flex flex-col justify-center space-y-4">
+            <h4 className="text-sm font-medium text-muted-foreground">Pre-Sale Progress</h4>
+            <Progress value={tokenData.percentageSold} className="h-4" />
+            <p className="text-sm text-muted-foreground text-right">
+              {tokenData.preSaleSold} / {tokenData.totalSupply} tokens sold
+              <span className="font-medium text-foreground ml-1">({tokenData.percentageSold}%)</span>
+            </p>
+          </div>
+        </div>
+      </Card>
+
+      {/* Location Distribution Section */}
+      <Card className="p-5">
+        <SectionHeading 
+          title="Geographic Distribution" 
+          description="Investor distribution by country"
+        />
+        
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-8 mt-4">
+          <div className="h-80">
             <ResponsiveContainer width="100%" height="100%">
               <PieChart>
                 <Pie
-                  data={tokenData}
+                  data={countryData}
                   cx="50%"
                   cy="50%"
-                  labelLine={false}
-                  outerRadius={80}
-                  fill="#8884d8"
+                  innerRadius={80}
+                  outerRadius={120}
+                  paddingAngle={2}
                   dataKey="value"
+                  label={({ name, percent }) => `${name} (${(percent * 100).toFixed(1)}%)`}
+                  labelLine={false}
                 >
-                  {tokenData.map((entry, index) => (
+                  {countryData.map((entry, index) => (
                     <Cell key={`cell-${index}`} fill={COLORS[index % COLORS.length]} />
                   ))}
                 </Pie>
-                <Tooltip
-                  formatter={(value) => [`${(value / 1000000).toFixed(1)}M CRYP`, 'Amount']}
+                <Tooltip 
+                  formatter={(value) => [`${value}%`, 'Distribution']}
                   contentStyle={{
                     backgroundColor: "hsl(var(--card))",
                     borderColor: "hsl(var(--border))",
                     borderRadius: "var(--radius)",
+                    padding: "10px 12px",
+                    fontSize: "12px",
                   }}
                 />
-                <Legend />
               </PieChart>
             </ResponsiveContainer>
           </div>
-        </div>
-      </Card>
-
-      {/* Geographical Distribution */}
-      <Card className="p-5">
-        <SectionHeading 
-          title="Geographical Distribution" 
-          description="User distribution by country"
-        />
-        
-        <div className="overflow-x-auto">
-          <table className="admin-table">
-            <thead>
-              <tr>
-                <th>Country</th>
-                <th>Users</th>
-                <th>Percentage</th>
-                <th>Distribution</th>
-              </tr>
-            </thead>
-            <tbody>
-              {locationData.map((location, index) => (
-                <tr key={index} className="hover:bg-muted/50">
-                  <td className="font-medium">{location.country}</td>
-                  <td>{location.users.toLocaleString()}</td>
-                  <td>{location.percentage}%</td>
-                  <td>
-                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-primary rounded-full" 
-                        style={{ width: `${location.percentage}%` }}
-                      ></div>
+          
+          <div className="space-y-4 flex flex-col justify-center">
+            <h4 className="text-sm font-medium">Top Countries</h4>
+            <div className="space-y-3">
+              {countryData.slice(0, 5).map((country, index) => (
+                <div key={index} className="flex items-center">
+                  <div className="w-3 h-3 rounded-full mr-2" style={{ backgroundColor: COLORS[index % COLORS.length] }} />
+                  <div className="flex-1">
+                    <div className="flex justify-between">
+                      <span className="text-sm font-medium">{country.name}</span>
+                      <span className="text-sm text-muted-foreground">{country.value}%</span>
                     </div>
-                  </td>
-                </tr>
+                    <Progress value={country.value} className="h-1 mt-1" />
+                  </div>
+                </div>
               ))}
-            </tbody>
-          </table>
+            </div>
+            
+            <div className="flex items-center pt-3 mt-2 border-t border-border">
+              <MapPin className="text-muted-foreground mr-2 w-4 h-4" />
+              <span className="text-sm text-muted-foreground">42 countries with active investors</span>
+            </div>
+          </div>
         </div>
       </Card>
-
-      {/* Key Metrics */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <Card className="p-5">
-          <SectionHeading 
-            title="Investment Metrics" 
-            description="Key ICO performance indicators"
-          />
-          
-          <div className="space-y-4">
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Average Investment</span>
-                <span className="font-medium">$1,450</span>
-              </div>
-              <Progress value={72} className="h-2" />
-            </div>
-            
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Largest Investment</span>
-                <span className="font-medium">$125,000</span>
-              </div>
-              <Progress value={95} className="h-2" />
-            </div>
-            
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Smallest Investment</span>
-                <span className="font-medium">$50</span>
-              </div>
-              <Progress value={20} className="h-2" />
-            </div>
-            
-            <div>
-              <div className="flex justify-between text-sm mb-1">
-                <span>Conversion Rate</span>
-                <span className="font-medium">8.4%</span>
-              </div>
-              <Progress value={42} className="h-2" />
-            </div>
-          </div>
-        </Card>
-        
-        <Card className="p-5">
-          <SectionHeading 
-            title="Upcoming Milestones" 
-            description="Token sale and development roadmap"
-          />
-          
-          <div className="space-y-4">
-            <div className="border-l-2 border-primary pl-4 pb-5 relative">
-              <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-0"></div>
-              <p className="font-medium">Public Sale Launch</p>
-              <p className="text-sm text-muted-foreground">July 25, 2023</p>
-              <p className="text-sm mt-1">Beginning of public token sale with initial price of $0.075.</p>
-            </div>
-            
-            <div className="border-l-2 border-primary pl-4 pb-5 relative">
-              <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-0"></div>
-              <p className="font-medium">Exchange Listing</p>
-              <p className="text-sm text-muted-foreground">August 15, 2023</p>
-              <p className="text-sm mt-1">Listing on major decentralized and centralized exchanges.</p>
-            </div>
-            
-            <div className="border-l-2 border-primary pl-4 pb-5 relative">
-              <div className="absolute w-3 h-3 bg-primary rounded-full -left-[7px] top-0"></div>
-              <p className="font-medium">Staking Program</p>
-              <p className="text-sm text-muted-foreground">September 1, 2023</p>
-              <p className="text-sm mt-1">Launch of token staking program with annual yields.</p>
-            </div>
-            
-            <div className="border-l-2 border-muted pl-4 relative">
-              <div className="absolute w-3 h-3 bg-muted rounded-full -left-[7px] top-0"></div>
-              <p className="font-medium">Platform Integration</p>
-              <p className="text-sm text-muted-foreground">October 10, 2023</p>
-              <p className="text-sm mt-1">Full integration with Cryptog fantasy platform features.</p>
-            </div>
-          </div>
-        </Card>
-      </div>
     </div>
   );
 };
