@@ -15,33 +15,14 @@ import {
   DialogClose,
 } from "@/components/ui/dialog";
 import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import {
   Form,
   FormControl,
   FormField,
   FormItem,
   FormLabel,
   FormMessage,
+  FormDescription,
 } from "@/components/ui/form";
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-  CommandList,
-} from "@/components/ui/command";
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from "@/components/ui/popover";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -76,7 +57,7 @@ interface Team {
   players: Asset[];
 }
 
-// Predefined team names
+// Predefined team names as examples (won't be used in dropdown anymore)
 const TEAM_NAME_SUGGESTIONS = [
   "Bullish Titans 🐂🔥",
   "Moonshot Mavericks 🚀💰",
@@ -107,8 +88,6 @@ const CryptogTeam = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
   const [deletingTeamId, setDeletingTeamId] = useState<string | null>(null);
-  const [open, setOpen] = useState(false);
-  const [customTeamName, setCustomTeamName] = useState("");
   const { toast } = useToast();
 
   // Initialize form
@@ -255,7 +234,6 @@ const CryptogTeam = () => {
     setTeams([...teams, newTeam]);
     setIsCreateOpen(false);
     form.reset();
-    setCustomTeamName("");
 
     toast({
       title: "Team created",
@@ -296,7 +274,6 @@ const CryptogTeam = () => {
     setIsEditOpen(false);
     setEditingTeam(null);
     form.reset();
-    setCustomTeamName("");
 
     toast({
       title: "Team updated",
@@ -429,64 +406,17 @@ const CryptogTeam = () => {
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem>
                     <FormLabel>Team Name</FormLabel>
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="justify-between w-full"
-                          >
-                            {field.value
-                              ? field.value
-                              : "Select or enter team name..."}
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[400px] p-0">
-                        <Command>
-                          <CommandInput
-                            placeholder="Search team name..."
-                            value={customTeamName}
-                            onValueChange={setCustomTeamName}
-                          />
-                          <CommandList>
-                            <CommandEmpty>
-                              {customTeamName ? (
-                                <div
-                                  className="px-2 py-3 text-sm cursor-pointer hover:bg-accent"
-                                  onClick={() => {
-                                    field.onChange(customTeamName);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  Use "{customTeamName}"
-                                </div>
-                              ) : (
-                                "No team name found."
-                              )}
-                            </CommandEmpty>
-                            <CommandGroup>
-                              {TEAM_NAME_SUGGESTIONS.map((name) => (
-                                <CommandItem
-                                  key={name}
-                                  value={name}
-                                  onSelect={() => {
-                                    field.onChange(name);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  {name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <Input 
+                        placeholder="Enter team name" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Example names: {TEAM_NAME_SUGGESTIONS[0]}, {TEAM_NAME_SUGGESTIONS[1]}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -597,64 +527,17 @@ const CryptogTeam = () => {
                 control={form.control}
                 name="name"
                 render={({ field }) => (
-                  <FormItem className="flex flex-col">
+                  <FormItem>
                     <FormLabel>Team Name</FormLabel>
-                    <Popover open={open} onOpenChange={setOpen}>
-                      <PopoverTrigger asChild>
-                        <FormControl>
-                          <Button
-                            variant="outline"
-                            role="combobox"
-                            aria-expanded={open}
-                            className="justify-between w-full"
-                          >
-                            {field.value
-                              ? field.value
-                              : "Select or enter team name..."}
-                          </Button>
-                        </FormControl>
-                      </PopoverTrigger>
-                      <PopoverContent className="w-[400px] p-0">
-                        <Command>
-                          <CommandInput
-                            placeholder="Search team name..."
-                            value={customTeamName}
-                            onValueChange={setCustomTeamName}
-                          />
-                          <CommandList>
-                            <CommandEmpty>
-                              {customTeamName ? (
-                                <div
-                                  className="px-2 py-3 text-sm cursor-pointer hover:bg-accent"
-                                  onClick={() => {
-                                    field.onChange(customTeamName);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  Use "{customTeamName}"
-                                </div>
-                              ) : (
-                                "No team name found."
-                              )}
-                            </CommandEmpty>
-                            <CommandGroup>
-                              {TEAM_NAME_SUGGESTIONS.map((name) => (
-                                <CommandItem
-                                  key={name}
-                                  value={name}
-                                  onSelect={() => {
-                                    field.onChange(name);
-                                    setOpen(false);
-                                  }}
-                                >
-                                  {name}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </CommandList>
-                        </Command>
-                      </PopoverContent>
-                    </Popover>
+                    <FormControl>
+                      <Input 
+                        placeholder="Enter team name" 
+                        {...field} 
+                      />
+                    </FormControl>
+                    <FormDescription>
+                      Example names: {TEAM_NAME_SUGGESTIONS[0]}, {TEAM_NAME_SUGGESTIONS[1]}
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
