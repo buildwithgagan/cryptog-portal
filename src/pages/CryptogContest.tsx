@@ -1,34 +1,42 @@
 import { useState, useEffect } from "react";
-import { 
-  Trophy,
-  Edit, 
-  Trash2, 
-  Plus, 
-  Save, 
-  Check, 
-  X,
-  MoreHorizontal
-} from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
+import { Plus } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import {
   Dialog,
   DialogContent,
   DialogHeader,
   DialogTitle,
-  DialogFooter,
-  DialogClose,
 } from "@/components/ui/dialog";
 import {
   AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
   AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import PageTitle from "@/components/shared/PageTitle";
+import SectionHeading from "@/components/shared/SectionHeading";
+import ContestList from "@/components/cryptog-contest/ContestList";
+import ContestForm, { contestFormSchema } from "@/components/cryptog-contest/ContestForm";
+import DeleteConfirmation from "@/components/cryptog-contest/DeleteConfirmation";
+import { Team, Contest } from "@/components/cryptog-contest/types";
+import { zodResolver } from "@hookform/resolvers/zod";
+import * as z from "zod";
+import { 
+  Pagination, 
+  PaginationContent, 
+  PaginationItem, 
+  PaginationPrevious, 
+  PaginationNext 
+} from "@/components/ui/pagination";
+import {
+  Edit, 
+  Trash2, 
+  Save, 
+  Check, 
+  X,
+  MoreHorizontal,
+  Trophy
+} from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import {
   Form,
   FormControl,
@@ -53,17 +61,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { useToast } from "@/hooks/use-toast";
-import PageTitle from "@/components/shared/PageTitle";
-import SectionHeading from "@/components/shared/SectionHeading";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
 import { cn } from "@/lib/utils";
-import ContestList from "@/components/cryptog-contest/ContestList";
-import ContestForm, { contestFormSchema } from "@/components/cryptog-contest/ContestForm";
-import DeleteConfirmation from "@/components/cryptog-contest/DeleteConfirmation";
-import { Team, Contest } from "@/components/cryptog-contest/types";
 
 const CryptogContest = () => {
   const [contests, setContests] = useState<Contest[]>([]);
@@ -73,6 +71,11 @@ const CryptogContest = () => {
   const [isDeleteOpen, setIsDeleteOpen] = useState(false);
   const [editingContest, setEditingContest] = useState<Contest | null>(null);
   const [deletingContestId, setDeletingContestId] = useState<string | null>(null);
+  
+  // Pagination state
+  const [currentPage, setCurrentPage] = useState(1);
+  const contestsPerPage = 6;
+  
   const { toast } = useToast();
 
   // Fetch teams (normally this would be an API call)
@@ -116,6 +119,47 @@ const CryptogContest = () => {
         teamB: mockTeams[5], // DeFi Dominators
         joiningFee: 250,
         winningPrize: 500000,
+      },
+      // Add more example contests to demonstrate pagination
+      {
+        id: "4",
+        name: "NFT Warriors Challenge",
+        teamA: mockTeams[6], // HODL Heroes
+        teamB: mockTeams[7], // Altcoin Avengers
+        joiningFee: 150,
+        winningPrize: 300000,
+      },
+      {
+        id: "5",
+        name: "Whale Traders Showdown",
+        teamA: mockTeams[0], // Bullish Titans
+        teamB: mockTeams[3], // Blockchain Bandits
+        joiningFee: 750,
+        winningPrize: 1500000,
+      },
+      {
+        id: "6",
+        name: "Metaverse Masters Cup",
+        teamA: mockTeams[2], // Diamond Hands Crew
+        teamB: mockTeams[5], // DeFi Dominators
+        joiningFee: 300,
+        winningPrize: 600000,
+      },
+      {
+        id: "7",
+        name: "Web3 Wizards Tournament",
+        teamA: mockTeams[1], // Moonshot Mavericks
+        teamB: mockTeams[4], // Crypto Crusaders
+        joiningFee: 450,
+        winningPrize: 900000,
+      },
+      {
+        id: "8",
+        name: "DeFi Dragons Derby",
+        teamA: mockTeams[6], // HODL Heroes
+        teamB: mockTeams[3], // Blockchain Bandits
+        joiningFee: 200,
+        winningPrize: 400000,
       },
     ];
 
@@ -163,6 +207,8 @@ const CryptogContest = () => {
       title: "Contest created",
       description: `${data.name} has been created successfully.`,
     });
+
+    setCurrentPage(Math.ceil((contests.length + 1) / contestsPerPage)); // Navigate to the last page after adding
   };
 
   // Handle edit contest
@@ -235,6 +281,12 @@ const CryptogContest = () => {
       description: `${contestToDelete?.name} has been deleted.`,
       variant: "destructive",
     });
+
+    // If we're on the last page and it becomes empty after deletion, go to previous page
+    const totalPages = Math.ceil((contests.length - 1) / contestsPerPage);
+    if (currentPage > totalPages && currentPage > 1) {
+      setCurrentPage(totalPages);
+    }
   };
 
   // Open edit modal
@@ -259,6 +311,20 @@ const CryptogContest = () => {
     return num.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
   };
 
+  // Pagination logic
+  const indexOfLastContest = currentPage * contestsPerPage;
+  const indexOfFirstContest = indexOfLastContest - contestsPerPage;
+  const currentContests = contests.slice(indexOfFirstContest, indexOfLastContest);
+  const totalPages = Math.ceil(contests.length / contestsPerPage);
+
+  const handlePreviousPage = () => {
+    setCurrentPage((prev) => Math.max(prev - 1, 1));
+  };
+
+  const handleNextPage = () => {
+    setCurrentPage((prev) => Math.min(prev + 1, totalPages));
+  };
+
   return (
     <div className="space-y-6 animate-enter">
       <PageTitle
@@ -278,11 +344,36 @@ const CryptogContest = () => {
 
       {/* Contest Grid */}
       <ContestList 
-        contests={contests} 
+        contests={currentContests} 
         onEdit={openEditModal} 
         onDelete={openDeleteConfirmation} 
         formatNumber={formatNumber}
       />
+
+      {/* Pagination */}
+      {contests.length > contestsPerPage && (
+        <Pagination className="mt-6">
+          <PaginationContent>
+            <PaginationItem>
+              <PaginationPrevious 
+                onClick={handlePreviousPage} 
+                className={currentPage === 1 ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              />
+            </PaginationItem>
+            <PaginationItem className="flex items-center px-4">
+              <span className="text-sm">
+                Page {currentPage} of {totalPages}
+              </span>
+            </PaginationItem>
+            <PaginationItem>
+              <PaginationNext 
+                onClick={handleNextPage} 
+                className={currentPage === totalPages ? "pointer-events-none opacity-50" : "cursor-pointer"}
+              />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+      )}
 
       {/* Create Contest Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
