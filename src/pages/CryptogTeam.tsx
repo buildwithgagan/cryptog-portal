@@ -1,80 +1,17 @@
+
 import { useState, useEffect } from "react";
-import { Users, Edit, Trash2, Plus, X, Save, Check, MoreHorizontal } from "lucide-react";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Plus } from "lucide-react";
+import { Button } from "@/components/ui/button";
+import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
+import { AlertDialog } from "@/components/ui/alert-dialog";
+import { useToast } from "@/hooks/use-toast";
+import * as z from "zod";
 import PageTitle from "@/components/shared/PageTitle";
 import SectionHeading from "@/components/shared/SectionHeading";
-import { Button } from "@/components/ui/button";
-import { useToast } from "@/hooks/use-toast";
-import {
-  Dialog,
-  DialogContent,
-  DialogHeader,
-  DialogTitle,
-  DialogFooter,
-  DialogClose,
-} from "@/components/ui/dialog";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-  FormDescription,
-} from "@/components/ui/form";
-import {
-  AlertDialog,
-  AlertDialogAction,
-  AlertDialogCancel,
-  AlertDialogContent,
-  AlertDialogDescription,
-  AlertDialogFooter,
-  AlertDialogHeader,
-  AlertDialogTitle,
-} from "@/components/ui/alert-dialog";
-import { Badge } from "@/components/ui/badge";
-import { Input } from "@/components/ui/input";
-import { ScrollArea } from "@/components/ui/scroll-area";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { useForm } from "react-hook-form";
-import * as z from "zod";
-import { cn } from "@/lib/utils";
-
-// Asset type (matching the one from CryptogAssets)
-interface Asset {
-  id: string;
-  name: string;
-  icon: JSX.Element;
-  creditRequired: number;
-  isActive: boolean;
-}
-
-// Team type
-interface Team {
-  id: string;
-  name: string;
-  players: Asset[];
-}
-
-// Predefined team names as examples (won't be used in dropdown anymore)
-const TEAM_NAME_SUGGESTIONS = [
-  "Bullish Titans 🐂🔥",
-  "Moonshot Mavericks 🚀💰",
-  "Diamond Hands Crew 💎✋",
-  "Blockchain Bandits ⛓️🏴‍☠️",
-  "Crypto Crusaders ⚔️🪙",
-  "DeFi Dominators 🏆📈",
-  "HODL Heroes 🦸‍♂️📊",
-  "Altcoin Avengers ⚡🛡️",
-  "Whale Warriors 🐋⚔️",
-  "Pump & Hold Legends 📊🚀",
-];
+import TeamList from "@/components/cryptog-team/TeamList";
+import TeamForm from "@/components/cryptog-team/TeamForm";
+import DeleteConfirmation from "@/components/cryptog-team/DeleteConfirmation";
+import { Asset, Team, TEAM_NAME_SUGGESTIONS } from "@/components/cryptog-team/types";
 
 // Form validation schema
 const teamFormSchema = z.object({
@@ -94,15 +31,6 @@ const CryptogTeam = () => {
   const [editingTeam, setEditingTeam] = useState<Team | null>(null);
   const [deletingTeamId, setDeletingTeamId] = useState<string | null>(null);
   const { toast } = useToast();
-
-  // Initialize form
-  const form = useForm<z.infer<typeof teamFormSchema>>({
-    resolver: zodResolver(teamFormSchema),
-    defaultValues: {
-      name: "",
-      players: [],
-    },
-  });
 
   // Fetch assets (normally this would be an API call)
   useEffect(() => {
@@ -238,7 +166,6 @@ const CryptogTeam = () => {
 
     setTeams([...teams, newTeam]);
     setIsCreateOpen(false);
-    form.reset();
 
     toast({
       title: "Team created",
@@ -278,7 +205,6 @@ const CryptogTeam = () => {
     setTeams(updatedTeams);
     setIsEditOpen(false);
     setEditingTeam(null);
-    form.reset();
 
     toast({
       title: "Team updated",
@@ -307,10 +233,6 @@ const CryptogTeam = () => {
   // Open edit modal
   const openEditModal = (team: Team) => {
     setEditingTeam(team);
-    form.reset({
-      name: team.name,
-      players: team.players.map((player) => player.id),
-    });
     setIsEditOpen(true);
   };
 
@@ -322,7 +244,6 @@ const CryptogTeam = () => {
 
   // Open create modal
   const openCreateModal = () => {
-    form.reset({ name: "", players: [] });
     setIsCreateOpen(true);
   };
 
@@ -344,65 +265,11 @@ const CryptogTeam = () => {
       </div>
 
       {/* Team Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-        {teams.map((team) => (
-          <Card key={team.id} className="overflow-hidden">
-            <CardHeader className="bg-muted/50 pb-4">
-              <div className="flex justify-between items-start">
-                <CardTitle className="text-lg w-full pr-8">{team.name}</CardTitle>
-                <DropdownMenu>
-                  <DropdownMenuTrigger asChild>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      className="absolute top-3 right-3 h-8 w-8"
-                    >
-                      <MoreHorizontal className="h-4 w-4" />
-                      <span className="sr-only">Open menu</span>
-                    </Button>
-                  </DropdownMenuTrigger>
-                  <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => openEditModal(team)}>
-                      <Edit className="h-4 w-4 mr-2" />
-                      Edit
-                    </DropdownMenuItem>
-                    <DropdownMenuItem 
-                      onClick={() => openDeleteConfirmation(team.id)}
-                      className="text-destructive focus:text-destructive"
-                    >
-                      <Trash2 className="h-4 w-4 mr-2" />
-                      Delete
-                    </DropdownMenuItem>
-                  </DropdownMenuContent>
-                </DropdownMenu>
-              </div>
-              <div className="flex items-center mt-2">
-                <Users className="mr-2 h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">
-                  Players: 10/10
-                </span>
-              </div>
-            </CardHeader>
-            <CardContent className="pt-4">
-              <div className="space-y-1">
-                <div className="text-sm font-medium">Team Players:</div>
-                <div className="flex flex-wrap gap-1.5">
-                  {team.players.map((player) => (
-                    <Badge
-                      key={player.id}
-                      variant="secondary"
-                      className="flex items-center gap-1"
-                    >
-                      {player.icon}
-                      <span>{player.name}</span>
-                    </Badge>
-                  ))}
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
+      <TeamList 
+        teams={teams} 
+        onEdit={openEditModal} 
+        onDelete={openDeleteConfirmation} 
+      />
 
       {/* Create Team Modal */}
       <Dialog open={isCreateOpen} onOpenChange={setIsCreateOpen}>
@@ -410,118 +277,12 @@ const CryptogTeam = () => {
           <DialogHeader>
             <DialogTitle>Create New Team</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleCreateTeam)}
-              className="space-y-6"
-            >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Team Name</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Enter team name" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Example names: {TEAM_NAME_SUGGESTIONS[0]}, {TEAM_NAME_SUGGESTIONS[1]}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="players"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Select Players (
-                      <span
-                        className={cn(
-                          field.value.length === 10
-                            ? "text-green-500"
-                            : "text-muted-foreground"
-                        )}
-                      >
-                        {field.value.length}/10
-                      </span>
-                      )
-                    </FormLabel>
-                    <ScrollArea className="h-[300px] border rounded-md p-4">
-                      <div className="space-y-2">
-                        {assets.map((asset) => (
-                          <div
-                            key={asset.id}
-                            className="flex items-center space-x-2"
-                          >
-                            <input
-                              type="checkbox"
-                              id={`player-${asset.id}`}
-                              checked={field.value.includes(asset.id)}
-                              onChange={(e) => {
-                                const isChecked = e.target.checked;
-                                let newValue = [...field.value];
-
-                                if (isChecked && newValue.length < 10) {
-                                  newValue.push(asset.id);
-                                } else if (isChecked && newValue.length >= 10) {
-                                  toast({
-                                    title: "Team is full",
-                                    description:
-                                      "A team can have exactly 10 players. Please remove a player before adding a new one.",
-                                    variant: "destructive",
-                                  });
-                                  return;
-                                } else {
-                                  newValue = newValue.filter(
-                                    (id) => id !== asset.id
-                                  );
-                                }
-
-                                field.onChange(newValue);
-                              }}
-                              className="h-4 w-4 rounded border-gray-300"
-                            />
-                            <label
-                              htmlFor={`player-${asset.id}`}
-                              className="flex items-center cursor-pointer"
-                            >
-                              <span className="flex items-center gap-2">
-                                {asset.icon}
-                                {asset.name}
-                              </span>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <DialogClose asChild>
-                  <Button type="button" variant="outline">
-                    Cancel
-                  </Button>
-                </DialogClose>
-                <Button
-                  type="submit"
-                  disabled={
-                    form.getValues().players.length !== 10 ||
-                    !form.getValues().name
-                  }
-                >
-                  <Save className="mr-2 h-4 w-4" /> Save Team
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+          <TeamForm 
+            isEditMode={false}
+            assets={assets}
+            onSubmit={handleCreateTeam}
+            onCancel={() => setIsCreateOpen(false)}
+          />
         </DialogContent>
       </Dialog>
 
@@ -531,143 +292,24 @@ const CryptogTeam = () => {
           <DialogHeader>
             <DialogTitle>Edit Team</DialogTitle>
           </DialogHeader>
-          <Form {...form}>
-            <form
-              onSubmit={form.handleSubmit(handleEditTeam)}
-              className="space-y-6"
-            >
-              <FormField
-                control={form.control}
-                name="name"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>Team Name</FormLabel>
-                    <FormControl>
-                      <Input 
-                        placeholder="Enter team name" 
-                        {...field} 
-                      />
-                    </FormControl>
-                    <FormDescription>
-                      Example names: {TEAM_NAME_SUGGESTIONS[0]}, {TEAM_NAME_SUGGESTIONS[1]}
-                    </FormDescription>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <FormField
-                control={form.control}
-                name="players"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormLabel>
-                      Select Players (
-                      <span
-                        className={cn(
-                          field.value.length === 10
-                            ? "text-green-500"
-                            : "text-muted-foreground"
-                        )}
-                      >
-                        {field.value.length}/10
-                      </span>
-                      )
-                    </FormLabel>
-                    <ScrollArea className="h-[300px] border rounded-md p-4">
-                      <div className="space-y-2">
-                        {assets.map((asset) => (
-                          <div
-                            key={asset.id}
-                            className="flex items-center space-x-2"
-                          >
-                            <input
-                              type="checkbox"
-                              id={`edit-player-${asset.id}`}
-                              checked={field.value.includes(asset.id)}
-                              onChange={(e) => {
-                                const isChecked = e.target.checked;
-                                let newValue = [...field.value];
-
-                                if (isChecked && newValue.length < 10) {
-                                  newValue.push(asset.id);
-                                } else if (isChecked && newValue.length >= 10) {
-                                  toast({
-                                    title: "Team is full",
-                                    description:
-                                      "A team can have exactly 10 players. Please remove a player before adding a new one.",
-                                    variant: "destructive",
-                                  });
-                                  return;
-                                } else {
-                                  newValue = newValue.filter(
-                                    (id) => id !== asset.id
-                                  );
-                                }
-
-                                field.onChange(newValue);
-                              }}
-                              className="h-4 w-4 rounded border-gray-300"
-                            />
-                            <label
-                              htmlFor={`edit-player-${asset.id}`}
-                              className="flex items-center cursor-pointer"
-                            >
-                              <span className="flex items-center gap-2">
-                                {asset.icon}
-                                {asset.name}
-                              </span>
-                            </label>
-                          </div>
-                        ))}
-                      </div>
-                    </ScrollArea>
-                    <FormMessage />
-                  </FormItem>
-                )}
-              />
-              <DialogFooter>
-                <Button
-                  type="button"
-                  variant="outline"
-                  onClick={() => setIsEditOpen(false)}
-                >
-                  Cancel
-                </Button>
-                <Button
-                  type="submit"
-                  disabled={
-                    form.getValues().players.length !== 10 ||
-                    !form.getValues().name
-                  }
-                >
-                  <Check className="mr-2 h-4 w-4" /> Update Team
-                </Button>
-              </DialogFooter>
-            </form>
-          </Form>
+          {editingTeam && (
+            <TeamForm 
+              isEditMode={true}
+              assets={assets}
+              onSubmit={handleEditTeam}
+              defaultValues={{
+                name: editingTeam.name,
+                players: editingTeam.players.map(player => player.id)
+              }}
+              onCancel={() => setIsEditOpen(false)}
+            />
+          )}
         </DialogContent>
       </Dialog>
 
       {/* Delete Confirmation Dialog */}
       <AlertDialog open={isDeleteOpen} onOpenChange={setIsDeleteOpen}>
-        <AlertDialogContent>
-          <AlertDialogHeader>
-            <AlertDialogTitle>Delete Team</AlertDialogTitle>
-            <AlertDialogDescription>
-              Are you sure you want to delete this team? This action cannot be
-              undone.
-            </AlertDialogDescription>
-          </AlertDialogHeader>
-          <AlertDialogFooter>
-            <AlertDialogCancel>Cancel</AlertDialogCancel>
-            <AlertDialogAction
-              onClick={handleDeleteTeam}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
-            >
-              <Trash2 className="mr-2 h-4 w-4" /> Delete
-            </AlertDialogAction>
-          </AlertDialogFooter>
-        </AlertDialogContent>
+        <DeleteConfirmation onDelete={handleDeleteTeam} />
       </AlertDialog>
     </div>
   );
