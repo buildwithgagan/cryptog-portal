@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Bitcoin, Check, CircleDollarSign, Edit, Trash2, X } from "lucide-react";
+import { Bitcoin, Check, CircleDollarSign, Edit, PlusCircle, Trash2, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import PageTitle from "@/components/shared/PageTitle";
 import SectionHeading from "@/components/shared/SectionHeading";
@@ -7,7 +7,19 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/hooks/use-toast"; // Fixed import path
+import { useToast } from "@/hooks/use-toast"; 
+import { 
+  Dialog, 
+  DialogContent, 
+  DialogDescription, 
+  DialogFooter, 
+  DialogHeader, 
+  DialogTitle 
+} from "@/components/ui/dialog";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { z } from "zod";
+import { useForm } from "react-hook-form";
+import { zodResolver } from "@hookform/resolvers/zod";
 
 // Asset type definition
 interface Asset {
@@ -18,10 +30,28 @@ interface Asset {
   isActive: boolean;
 }
 
+// Form schema for adding a new asset
+const assetFormSchema = z.object({
+  name: z.string().min(2, "Asset name must be at least 2 characters"),
+  creditRequired: z.number().min(1, "Credit required must be at least 1"),
+});
+
+type AssetFormValues = z.infer<typeof assetFormSchema>;
+
 const CryptogAssets = () => {
   const { toast } = useToast();
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<number>(0);
+  const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  
+  // Form setup for adding a new asset
+  const form = useForm<AssetFormValues>({
+    resolver: zodResolver(assetFormSchema),
+    defaultValues: {
+      name: "",
+      creditRequired: 5,
+    },
+  });
   
   // Initial assets data
   const [assets, setAssets] = useState<Asset[]>([
@@ -122,12 +152,41 @@ const CryptogAssets = () => {
     });
   };
 
+  // Add new asset
+  const addAsset = (data: AssetFormValues) => {
+    const newAsset: Asset = {
+      id: (assets.length + 1).toString(),
+      name: data.name,
+      icon: <CircleDollarSign className="text-blue-500" />,
+      creditRequired: data.creditRequired,
+      isActive: true,
+    };
+    
+    setAssets([...assets, newAsset]);
+    setIsAddDialogOpen(false);
+    form.reset();
+    
+    toast({
+      title: "Asset added",
+      description: `${data.name} has been added to the assets list.`,
+    });
+  };
+
   return (
     <div className="space-y-6 animate-enter">
-      <PageTitle 
-        title="Manage Cryptog Assets" 
-        subtitle="Control cryptocurrency assets available in the Cryptog platform."
-      />
+      <div className="flex items-center justify-between">
+        <PageTitle 
+          title="Manage Cryptog Assets" 
+          subtitle="Control cryptocurrency assets available in the Cryptog platform."
+        />
+        <Button 
+          onClick={() => setIsAddDialogOpen(true)}
+          className="flex items-center gap-2"
+        >
+          <PlusCircle className="h-4 w-4" />
+          Add Asset
+        </Button>
+      </div>
 
       <Card className="p-5">
         <SectionHeading 
@@ -224,6 +283,62 @@ const CryptogAssets = () => {
           </Table>
         </div>
       </Card>
+
+      {/* Add Asset Dialog */}
+      <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
+        <DialogContent className="sm:max-w-[425px]">
+          <DialogHeader>
+            <DialogTitle>Add New Asset</DialogTitle>
+            <DialogDescription>
+              Enter the details for the new cryptocurrency asset.
+            </DialogDescription>
+          </DialogHeader>
+          
+          <Form {...form}>
+            <form onSubmit={form.handleSubmit(addAsset)} className="space-y-4">
+              <FormField
+                control={form.control}
+                name="name"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Asset Name</FormLabel>
+                    <FormControl>
+                      <Input placeholder="Bitcoin, Ethereum, etc." {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="creditRequired"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Credits Required</FormLabel>
+                    <FormControl>
+                      <Input 
+                        type="number" 
+                        min={1}
+                        {...field}
+                        onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
+                      />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <DialogFooter>
+                <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+                  Cancel
+                </Button>
+                <Button type="submit">Add Asset</Button>
+              </DialogFooter>
+            </form>
+          </Form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 };
