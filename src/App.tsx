@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,6 +13,7 @@ import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
 import ComingSoon from "@/components/shared/ComingSoon";
 import CryptogAssets from "./pages/CryptogAssets";
+import CryptogTeam from "./pages/CryptogTeam";
 
 const queryClient = new QueryClient();
 
@@ -30,7 +32,7 @@ const App = () => (
           
           {/* Cryptog subpages */}
           <Route path="cryptog/assets" element={<CryptogAssets />} />
-          <Route path="cryptog/team" element={<ComingSoon title="Cryptog Teams" description="Manage teams for the Cryptog platform." />} />
+          <Route path="cryptog/team" element={<CryptogTeam />} />
           <Route path="cryptog/contest" element={<ComingSoon title="Cryptog Contests" description="Manage contests for the Cryptog platform." />} />
           
           {/* Stock Fantasy subpages */}
