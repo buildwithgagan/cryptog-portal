@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -13,6 +14,7 @@ import NotFound from "./pages/NotFound";
 import ComingSoon from "@/components/shared/ComingSoon";
 import CryptogAssets from "./pages/CryptogAssets";
 import CryptogTeam from "./pages/CryptogTeam";
+import CryptogContest from "./pages/CryptogContest";
 import { useState } from "react";
 
 const App = () => {
@@ -35,7 +37,7 @@ const App = () => {
             {/* Cryptog subpages */}
             <Route path="cryptog/assets" element={<CryptogAssets />} />
             <Route path="cryptog/team" element={<CryptogTeam />} />
-            <Route path="cryptog/contest" element={<ComingSoon title="Cryptog Contests" description="Manage contests for the Cryptog platform." />} />
+            <Route path="cryptog/contest" element={<CryptogContest />} />
             
             {/* Stock Fantasy subpages */}
             <Route path="stock-fantasy/assets" element={<ComingSoon title="Stock Fantasy Assets" description="Manage stock assets for the Stock Fantasy platform." />} />
