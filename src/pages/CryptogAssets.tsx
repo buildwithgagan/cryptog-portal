@@ -1,4 +1,3 @@
-
 import { useState } from "react";
 import { Bitcoin, Check, CircleDollarSign, Edit, Trash2, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -8,7 +7,7 @@ import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
-import { useToast } from "@/components/ui/use-toast"; // Fixed import path
+import { useToast } from "@/hooks/use-toast"; // Fixed import path
 
 // Asset type definition
 interface Asset {
