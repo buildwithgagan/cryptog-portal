@@ -1,4 +1,3 @@
-
 import { useState, useEffect } from "react";
 import { 
   Trophy,
@@ -7,7 +6,8 @@ import {
   Plus, 
   Save, 
   Check, 
-  X 
+  X,
+  MoreHorizontal
 } from "lucide-react";
 import { Card, CardContent, CardHeader, CardTitle, CardFooter } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
@@ -45,12 +45,18 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
 import { useToast } from "@/hooks/use-toast";
 import PageTitle from "@/components/shared/PageTitle";
 import SectionHeading from "@/components/shared/SectionHeading";
-import { zodResolver } from "@hookform/resolvers/zod";
+import { zodResolver } from "@hookform/resolvers.zod";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { cn } from "@/lib/utils";
@@ -328,30 +334,38 @@ const CryptogContest = () => {
       {/* Contest Grid */}
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         {contests.map((contest) => (
-          <Card key={contest.id} className="overflow-hidden border-2 hover:border-primary/50 transition-all duration-200">
+          <Card key={contest.id} className="overflow-hidden border-2 hover:border-primary/50 transition-all duration-200 relative">
             <CardHeader className="bg-muted/50 pb-4">
               <div className="flex justify-between items-start">
-                <CardTitle className="text-lg flex items-center gap-2">
+                <CardTitle className="text-lg flex items-center gap-2 w-full pr-8">
                   <Trophy className="h-5 w-5 text-amber-500" />
                   {contest.name}
                 </CardTitle>
-                <div className="flex space-x-1">
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    onClick={() => openEditModal(contest)}
-                  >
-                    <Edit className="h-4 w-4" />
-                  </Button>
-                  <Button
-                    variant="ghost"
-                    size="icon"
-                    className="text-destructive hover:text-destructive"
-                    onClick={() => openDeleteConfirmation(contest.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      className="absolute top-3 right-3 h-8 w-8 hover:bg-muted focus:bg-muted"
+                    >
+                      <MoreHorizontal className="h-5 w-5" />
+                      <span className="sr-only">Open menu</span>
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end">
+                    <DropdownMenuItem onClick={() => openEditModal(contest)}>
+                      <Edit className="h-4 w-4 mr-2" />
+                      Edit
+                    </DropdownMenuItem>
+                    <DropdownMenuItem 
+                      onClick={() => openDeleteConfirmation(contest.id)}
+                      className="text-destructive focus:text-destructive"
+                    >
+                      <Trash2 className="h-4 w-4 mr-2" />
+                      Delete
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
               </div>
             </CardHeader>
             <CardContent className="pt-4 pb-2">
