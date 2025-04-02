@@ -19,7 +19,7 @@ interface TeamCardProps {
 
 const TeamCard = ({ team, onEdit, onDelete }: TeamCardProps) => {
   return (
-    <Card className="overflow-hidden">
+    <Card className="overflow-hidden relative">
       <CardHeader className="bg-muted/50 pb-4">
         <div className="flex justify-between items-start">
           <CardTitle className="text-lg w-full pr-8">{team.name}</CardTitle>
@@ -28,9 +28,9 @@ const TeamCard = ({ team, onEdit, onDelete }: TeamCardProps) => {
               <Button
                 variant="ghost"
                 size="icon"
-                className="absolute top-3 right-3 h-8 w-8"
+                className="absolute top-3 right-3 h-8 w-8 hover:bg-muted focus:bg-muted"
               >
-                <MoreHorizontal className="h-4 w-4" />
+                <MoreHorizontal className="h-5 w-5" />
                 <span className="sr-only">Open menu</span>
               </Button>
             </DropdownMenuTrigger>
