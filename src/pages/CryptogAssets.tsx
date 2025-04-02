@@ -1,3 +1,4 @@
+
 import { useState } from "react";
 import { Bitcoin, Check, CircleDollarSign, Edit, PlusCircle, Trash2, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
@@ -20,20 +21,40 @@ import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
+import { 
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 
 // Asset type definition
 interface Asset {
   id: string;
   name: string;
   icon: JSX.Element;
+  iconType: string;
   creditRequired: number;
   isActive: boolean;
 }
+
+// Icon mapping for selection
+const iconOptions = [
+  { value: "bitcoin", label: "Bitcoin", element: <Bitcoin className="text-orange-500" /> },
+  { value: "circle-dollar-blue", label: "Circle Dollar (Blue)", element: <CircleDollarSign className="text-blue-500" /> },
+  { value: "circle-dollar-green", label: "Circle Dollar (Green)", element: <CircleDollarSign className="text-green-500" /> },
+  { value: "circle-dollar-purple", label: "Circle Dollar (Purple)", element: <CircleDollarSign className="text-purple-500" /> },
+  { value: "circle-dollar-yellow", label: "Circle Dollar (Yellow)", element: <CircleDollarSign className="text-yellow-500" /> },
+  { value: "circle-dollar-red", label: "Circle Dollar (Red)", element: <CircleDollarSign className="text-red-500" /> },
+];
 
 // Form schema for adding a new asset
 const assetFormSchema = z.object({
   name: z.string().min(2, "Asset name must be at least 2 characters"),
   creditRequired: z.number().min(1, "Credit required must be at least 1"),
+  iconType: z.string().min(1, "Please select an icon"),
+  isActive: z.boolean().default(true),
 });
 
 type AssetFormValues = z.infer<typeof assetFormSchema>;
@@ -50,6 +71,8 @@ const CryptogAssets = () => {
     defaultValues: {
       name: "",
       creditRequired: 5,
+      iconType: "circle-dollar-blue",
+      isActive: true,
     },
   });
   
@@ -58,42 +81,48 @@ const CryptogAssets = () => {
     { 
       id: "1", 
       name: "Bitcoin", 
-      icon: <Bitcoin className="text-orange-500" />, 
+      icon: <Bitcoin className="text-orange-500" />,
+      iconType: "bitcoin", 
       creditRequired: 10, 
       isActive: true 
     },
     { 
       id: "2", 
       name: "Ethereum", 
-      icon: <CircleDollarSign className="text-purple-500" />, 
+      icon: <CircleDollarSign className="text-purple-500" />,
+      iconType: "circle-dollar-purple", 
       creditRequired: 8, 
       isActive: true 
     },
     { 
       id: "3", 
       name: "Solana", 
-      icon: <CircleDollarSign className="text-green-500" />, 
+      icon: <CircleDollarSign className="text-green-500" />,
+      iconType: "circle-dollar-green", 
       creditRequired: 6, 
       isActive: true 
     },
     { 
       id: "4", 
       name: "Cardano (ADA)", 
-      icon: <CircleDollarSign className="text-blue-500" />, 
+      icon: <CircleDollarSign className="text-blue-500" />,
+      iconType: "circle-dollar-blue", 
       creditRequired: 4, 
       isActive: false 
     },
     { 
       id: "5", 
       name: "Floki", 
-      icon: <CircleDollarSign className="text-yellow-500" />, 
+      icon: <CircleDollarSign className="text-yellow-500" />,
+      iconType: "circle-dollar-yellow", 
       creditRequired: 5, 
       isActive: true 
     },
     { 
       id: "6", 
       name: "PEPE", 
-      icon: <CircleDollarSign className="text-green-400" />, 
+      icon: <CircleDollarSign className="text-green-400" />,
+      iconType: "circle-dollar-green", 
       creditRequired: 3, 
       isActive: false 
     },
@@ -152,14 +181,21 @@ const CryptogAssets = () => {
     });
   };
 
+  // Get icon element based on iconType
+  const getIconElement = (iconType: string) => {
+    const icon = iconOptions.find(icon => icon.value === iconType);
+    return icon ? icon.element : <CircleDollarSign className="text-blue-500" />;
+  };
+
   // Add new asset
   const addAsset = (data: AssetFormValues) => {
     const newAsset: Asset = {
       id: (assets.length + 1).toString(),
       name: data.name,
-      icon: <CircleDollarSign className="text-blue-500" />,
+      icon: getIconElement(data.iconType),
+      iconType: data.iconType,
       creditRequired: data.creditRequired,
-      isActive: true,
+      isActive: data.isActive,
     };
     
     setAssets([...assets, newAsset]);
@@ -325,6 +361,62 @@ const CryptogAssets = () => {
                       />
                     </FormControl>
                     <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="iconType"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormLabel>Icon</FormLabel>
+                    <Select 
+                      onValueChange={field.onChange} 
+                      defaultValue={field.value}
+                    >
+                      <FormControl>
+                        <SelectTrigger>
+                          <SelectValue placeholder="Select an icon" />
+                        </SelectTrigger>
+                      </FormControl>
+                      <SelectContent>
+                        {iconOptions.map((icon) => (
+                          <SelectItem key={icon.value} value={icon.value}>
+                            <div className="flex items-center gap-2">
+                              {icon.element}
+                              <span>{icon.label}</span>
+                            </div>
+                          </SelectItem>
+                        ))}
+                      </SelectContent>
+                    </Select>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+              
+              <FormField
+                control={form.control}
+                name="isActive"
+                render={({ field }) => (
+                  <FormItem className="flex flex-row items-start space-x-3 space-y-0 rounded-md border p-4">
+                    <FormControl>
+                      <Switch
+                        checked={field.value}
+                        onCheckedChange={field.onChange}
+                      />
+                    </FormControl>
+                    <div className="space-y-1 leading-none">
+                      <FormLabel>
+                        Status: {field.value ? "Active" : "Inactive"}
+                      </FormLabel>
+                      <p className="text-sm text-muted-foreground">
+                        {field.value 
+                          ? "Asset will be available for contests" 
+                          : "Asset will not be available for contests"}
+                      </p>
+                    </div>
                   </FormItem>
                 )}
               />
