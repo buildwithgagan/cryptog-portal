@@ -34,6 +34,7 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
 
   const checkAuth = (): boolean => {
     const token = localStorage.getItem("admin_token");
+    setIsAuthenticated(!!token);
     return !!token;
   };
 
