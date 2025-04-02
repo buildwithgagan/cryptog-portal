@@ -1,5 +1,4 @@
-
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { Bitcoin, Check, CircleDollarSign, Edit, PlusCircle, Trash2, X } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import PageTitle from "@/components/shared/PageTitle";
@@ -17,43 +16,45 @@ import {
   DialogHeader, 
   DialogTitle 
 } from "@/components/ui/dialog";
-import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from "@/components/ui/form";
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage, FormDescription } from "@/components/ui/form";
 import { z } from "zod";
 import { useForm } from "react-hook-form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import { 
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 
 // Asset type definition
 interface Asset {
   id: string;
   name: string;
   icon: JSX.Element;
-  iconType: string;
+  iconUrl: string;
   creditRequired: number;
   isActive: boolean;
 }
 
-// Icon mapping for selection
-const iconOptions = [
-  { value: "bitcoin", label: "Bitcoin", element: <Bitcoin className="text-orange-500" /> },
-  { value: "circle-dollar-blue", label: "Circle Dollar (Blue)", element: <CircleDollarSign className="text-blue-500" /> },
-  { value: "circle-dollar-green", label: "Circle Dollar (Green)", element: <CircleDollarSign className="text-green-500" /> },
-  { value: "circle-dollar-purple", label: "Circle Dollar (Purple)", element: <CircleDollarSign className="text-purple-500" /> },
-  { value: "circle-dollar-yellow", label: "Circle Dollar (Yellow)", element: <CircleDollarSign className="text-yellow-500" /> },
-  { value: "circle-dollar-red", label: "Circle Dollar (Red)", element: <CircleDollarSign className="text-red-500" /> },
-];
+// Default icon if no icon is uploaded
+const DefaultIcon = () => <CircleDollarSign className="text-blue-500" />;
 
-// Form schema for adding a new asset
+// File size limit: 3MB in bytes
+const MAX_FILE_SIZE = 3 * 1024 * 1024;
+const ACCEPTED_IMAGE_TYPES = ["image/jpeg", "image/jpg", "image/png", "image/gif", "image/svg+xml"];
+
+// Form schema for adding a new asset with validations
 const assetFormSchema = z.object({
   name: z.string().min(2, "Asset name must be at least 2 characters"),
-  creditRequired: z.number().min(1, "Credit required must be at least 1"),
-  iconType: z.string().min(1, "Please select an icon"),
+  creditRequired: z.number()
+    .min(1, "Credit required must be at least 1")
+    .max(1000, "Credit required must not exceed 1000"),
+  icon: z
+    .instanceof(FileList)
+    .refine((files) => files.length > 0, "Icon is required")
+    .refine(
+      (files) => files[0]?.size <= MAX_FILE_SIZE,
+      "File size must not exceed 3MB"
+    )
+    .refine(
+      (files) => ACCEPTED_IMAGE_TYPES.includes(files[0]?.type),
+      "Only .jpg, .jpeg, .png, .gif and .svg formats are supported"
+    ),
   isActive: z.boolean().default(true),
 });
 
@@ -64,6 +65,7 @@ const CryptogAssets = () => {
   const [editingId, setEditingId] = useState<string | null>(null);
   const [editValue, setEditValue] = useState<number>(0);
   const [isAddDialogOpen, setIsAddDialogOpen] = useState(false);
+  const fileInputRef = useRef<HTMLInputElement>(null);
   
   // Form setup for adding a new asset
   const form = useForm<AssetFormValues>({
@@ -71,7 +73,6 @@ const CryptogAssets = () => {
     defaultValues: {
       name: "",
       creditRequired: 5,
-      iconType: "circle-dollar-blue",
       isActive: true,
     },
   });
@@ -82,7 +83,7 @@ const CryptogAssets = () => {
       id: "1", 
       name: "Bitcoin", 
       icon: <Bitcoin className="text-orange-500" />,
-      iconType: "bitcoin", 
+      iconUrl: "",
       creditRequired: 10, 
       isActive: true 
     },
@@ -90,7 +91,7 @@ const CryptogAssets = () => {
       id: "2", 
       name: "Ethereum", 
       icon: <CircleDollarSign className="text-purple-500" />,
-      iconType: "circle-dollar-purple", 
+      iconUrl: "",
       creditRequired: 8, 
       isActive: true 
     },
@@ -98,7 +99,7 @@ const CryptogAssets = () => {
       id: "3", 
       name: "Solana", 
       icon: <CircleDollarSign className="text-green-500" />,
-      iconType: "circle-dollar-green", 
+      iconUrl: "",
       creditRequired: 6, 
       isActive: true 
     },
@@ -106,7 +107,7 @@ const CryptogAssets = () => {
       id: "4", 
       name: "Cardano (ADA)", 
       icon: <CircleDollarSign className="text-blue-500" />,
-      iconType: "circle-dollar-blue", 
+      iconUrl: "",
       creditRequired: 4, 
       isActive: false 
     },
@@ -114,7 +115,7 @@ const CryptogAssets = () => {
       id: "5", 
       name: "Floki", 
       icon: <CircleDollarSign className="text-yellow-500" />,
-      iconType: "circle-dollar-yellow", 
+      iconUrl: "",
       creditRequired: 5, 
       isActive: true 
     },
@@ -122,7 +123,7 @@ const CryptogAssets = () => {
       id: "6", 
       name: "PEPE", 
       icon: <CircleDollarSign className="text-green-400" />,
-      iconType: "circle-dollar-green", 
+      iconUrl: "",
       creditRequired: 3, 
       isActive: false 
     },
@@ -181,31 +182,59 @@ const CryptogAssets = () => {
     });
   };
 
-  // Get icon element based on iconType
-  const getIconElement = (iconType: string) => {
-    const icon = iconOptions.find(icon => icon.value === iconType);
-    return icon ? icon.element : <CircleDollarSign className="text-blue-500" />;
+  // Convert an uploaded file to a data URL
+  const fileToDataUrl = (file: File): Promise<string> => {
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result as string);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
   };
 
-  // Add new asset
-  const addAsset = (data: AssetFormValues) => {
-    const newAsset: Asset = {
-      id: (assets.length + 1).toString(),
-      name: data.name,
-      icon: getIconElement(data.iconType),
-      iconType: data.iconType,
-      creditRequired: data.creditRequired,
-      isActive: data.isActive,
-    };
-    
-    setAssets([...assets, newAsset]);
-    setIsAddDialogOpen(false);
-    form.reset();
-    
-    toast({
-      title: "Asset added",
-      description: `${data.name} has been added to the assets list.`,
-    });
+  // Add new asset with file upload handling
+  const addAsset = async (data: AssetFormValues) => {
+    try {
+      const file = data.icon[0];
+      const iconUrl = await fileToDataUrl(file);
+      
+      // Create icon element based on file type
+      let iconElement: JSX.Element = <DefaultIcon />;
+      
+      // Assign appropriate icon based on file type
+      if (file.type.includes('svg')) {
+        iconElement = <img src={iconUrl} alt={data.name} className="w-6 h-6" />;
+      } else {
+        iconElement = <div className="w-6 h-6 rounded-full overflow-hidden">
+          <img src={iconUrl} alt={data.name} className="w-full h-full object-cover" />
+        </div>;
+      }
+      
+      const newAsset: Asset = {
+        id: (assets.length + 1).toString(),
+        name: data.name,
+        icon: iconElement,
+        iconUrl: iconUrl,
+        creditRequired: data.creditRequired,
+        isActive: data.isActive,
+      };
+      
+      setAssets([...assets, newAsset]);
+      setIsAddDialogOpen(false);
+      form.reset();
+      
+      toast({
+        title: "Asset added",
+        description: `${data.name} has been added to the assets list.`,
+      });
+    } catch (error) {
+      console.error("Error adding asset:", error);
+      toast({
+        title: "Error",
+        description: "Failed to process the image. Please try again.",
+        variant: "destructive",
+      });
+    }
   };
 
   return (
@@ -322,7 +351,7 @@ const CryptogAssets = () => {
 
       {/* Add Asset Dialog */}
       <Dialog open={isAddDialogOpen} onOpenChange={setIsAddDialogOpen}>
-        <DialogContent className="sm:max-w-[425px]">
+        <DialogContent className="sm:max-w-[500px]">
           <DialogHeader>
             <DialogTitle>Add New Asset</DialogTitle>
             <DialogDescription>
@@ -331,16 +360,19 @@ const CryptogAssets = () => {
           </DialogHeader>
           
           <Form {...form}>
-            <form onSubmit={form.handleSubmit(addAsset)} className="space-y-4">
+            <form onSubmit={form.handleSubmit(addAsset)} className="space-y-5">
               <FormField
                 control={form.control}
                 name="name"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Asset Name</FormLabel>
+                    <FormLabel>Asset Name <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input placeholder="Bitcoin, Ethereum, etc." {...field} />
                     </FormControl>
+                    <FormDescription>
+                      Enter the full name of the cryptocurrency asset.
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -351,15 +383,19 @@ const CryptogAssets = () => {
                 name="creditRequired"
                 render={({ field }) => (
                   <FormItem>
-                    <FormLabel>Credits Required</FormLabel>
+                    <FormLabel>Credits Required <span className="text-red-500">*</span></FormLabel>
                     <FormControl>
                       <Input 
                         type="number" 
                         min={1}
+                        max={1000}
                         {...field}
                         onChange={(e) => field.onChange(parseInt(e.target.value) || 1)}
                       />
                     </FormControl>
+                    <FormDescription>
+                      Enter the number of credits required to use this asset (between 1 and 1000).
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -367,30 +403,38 @@ const CryptogAssets = () => {
               
               <FormField
                 control={form.control}
-                name="iconType"
-                render={({ field }) => (
+                name="icon"
+                render={({ field: { onChange, value, ...fieldProps } }) => (
                   <FormItem>
-                    <FormLabel>Icon</FormLabel>
-                    <Select 
-                      onValueChange={field.onChange} 
-                      defaultValue={field.value}
-                    >
-                      <FormControl>
-                        <SelectTrigger>
-                          <SelectValue placeholder="Select an icon" />
-                        </SelectTrigger>
-                      </FormControl>
-                      <SelectContent>
-                        {iconOptions.map((icon) => (
-                          <SelectItem key={icon.value} value={icon.value}>
-                            <div className="flex items-center gap-2">
-                              {icon.element}
-                              <span>{icon.label}</span>
-                            </div>
-                          </SelectItem>
-                        ))}
-                      </SelectContent>
-                    </Select>
+                    <FormLabel>Icon <span className="text-red-500">*</span></FormLabel>
+                    <FormControl>
+                      <div className="flex flex-col gap-2">
+                        <Input 
+                          id="icon"
+                          type="file"
+                          ref={fileInputRef}
+                          accept=".jpg,.jpeg,.png,.gif,.svg"
+                          onChange={(e) => {
+                            onChange(e.target.files);
+                          }}
+                          {...fieldProps}
+                        />
+                        {form.formState.errors.icon && (
+                          <p className="text-sm font-medium text-destructive">
+                            {form.formState.errors.icon.message}
+                          </p>
+                        )}
+                      </div>
+                    </FormControl>
+                    <FormDescription className="text-xs space-y-1">
+                      <p>Upload an icon for the cryptocurrency asset.</p>
+                      <ul className="list-disc pl-4 text-muted-foreground">
+                        <li>Accepted formats: PNG, JPG, JPEG, GIF, SVG</li>
+                        <li>Maximum file size: 3MB</li>
+                        <li>Recommended dimensions: 200px x 200px</li>
+                        <li>Square aspect ratio for best results</li>
+                      </ul>
+                    </FormDescription>
                     <FormMessage />
                   </FormItem>
                 )}
@@ -409,7 +453,7 @@ const CryptogAssets = () => {
                     </FormControl>
                     <div className="space-y-1 leading-none">
                       <FormLabel>
-                        Status: {field.value ? "Active" : "Inactive"}
+                        Status: {field.value ? "Active" : "Inactive"} <span className="text-red-500">*</span>
                       </FormLabel>
                       <p className="text-sm text-muted-foreground">
                         {field.value 
@@ -421,8 +465,15 @@ const CryptogAssets = () => {
                 )}
               />
               
-              <DialogFooter>
-                <Button type="button" variant="outline" onClick={() => setIsAddDialogOpen(false)}>
+              <DialogFooter className="mt-6">
+                <Button 
+                  type="button" 
+                  variant="outline" 
+                  onClick={() => {
+                    setIsAddDialogOpen(false);
+                    form.reset();
+                  }}
+                >
                   Cancel
                 </Button>
                 <Button type="submit">Add Asset</Button>
