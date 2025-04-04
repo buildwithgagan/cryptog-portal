@@ -11,4 +11,6 @@ export interface Contest {
   teamB: Team;
   joiningFee: number;
   winningPrize: number;
+  startDateTime: Date;
+  endDateTime: Date;
 }

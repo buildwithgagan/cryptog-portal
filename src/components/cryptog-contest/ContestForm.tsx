@@ -23,6 +23,7 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Team, Contest } from "./types";
+import { DateTimePicker } from "./DateTimePicker";
 
 // Form validation schema
 export const contestFormSchema = z.object({
@@ -31,12 +32,27 @@ export const contestFormSchema = z.object({
   teamB: z.string().min(1, "Second team is required"),
   joiningFee: z.number().min(1, "Joining fee must be greater than 0 CTOG"),
   winningPrize: z.number().min(1, "Winning prize must be greater than 0 CTOG"),
+  startDateTime: z.date({
+    required_error: "Start date and time is required",
+    invalid_type_error: "Start date and time is required",
+  }).refine((date) => {
+    return date > new Date();
+  }, {
+    message: "Start date and time must be in the future",
+  }),
+  endDateTime: z.date({
+    required_error: "End date and time is required",
+    invalid_type_error: "End date and time is required",
+  }),
 }).refine((data) => data.teamA !== data.teamB, {
   message: "Team A and Team B must be different",
   path: ["teamB"],
 }).refine((data) => data.winningPrize > data.joiningFee, {
   message: "Winning prize must be greater than joining fee",
   path: ["winningPrize"],
+}).refine((data) => data.endDateTime > data.startDateTime, {
+  message: "End date and time must be after start date and time",
+  path: ["endDateTime"],
 });
 
 interface ContestFormProps {
@@ -56,6 +72,8 @@ const ContestForm = ({ teams, onSubmit, defaultValues, isEditing, onCancel }: Co
       teamB: "",
       joiningFee: 100,
       winningPrize: 200,
+      startDateTime: new Date(Date.now() + 24 * 60 * 60 * 1000), // Tomorrow
+      endDateTime: new Date(Date.now() + 7 * 24 * 60 * 60 * 1000), // One week from now
     },
   });
 
@@ -200,6 +218,46 @@ const ContestForm = ({ teams, onSubmit, defaultValues, isEditing, onCancel }: Co
             )}
           />
         </div>
+
+        <FormField
+          control={form.control}
+          name="startDateTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Start Date & Time</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  date={field.value}
+                  setDate={field.onChange}
+                />
+              </FormControl>
+              <FormDescription>
+                The contest will be available starting from this date and time
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        <FormField
+          control={form.control}
+          name="endDateTime"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>End Date & Time</FormLabel>
+              <FormControl>
+                <DateTimePicker
+                  date={field.value}
+                  setDate={field.onChange}
+                />
+              </FormControl>
+              <FormDescription>
+                The contest will close at this date and time
+              </FormDescription>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
 
         <DialogFooter>
           {isEditing ? (
