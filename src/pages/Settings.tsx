@@ -12,7 +12,6 @@ import {
   SelectValue,
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
-import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 import { useToast } from "@/components/ui/use-toast";
 import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
 import { Check } from "lucide-react";
@@ -21,19 +20,8 @@ import { Check } from "lucide-react";
 const navItems = [
   { id: "profile", label: "Profile" },
   { id: "account", label: "Account" },
-  { id: "appearance", label: "Appearance" },
   { id: "notifications", label: "Notifications" },
   { id: "display", label: "Display" },
-];
-
-// Define theme options
-const themeOptions = [
-  { id: "default", label: "Default", color: "#000000", bgColor: "#FFFFFF", accentColor: "#F1F1F1" },
-  { id: "purple", label: "White + Purple", color: "#9b87f5", bgColor: "#FFFFFF", accentColor: "#E5DEFF" },
-  { id: "blue", label: "White + Blue", color: "#0EA5E9", bgColor: "#FFFFFF", accentColor: "#D3E4FD" },
-  { id: "dark", label: "Dark Mode", color: "#FFFFFF", bgColor: "#1A1F2C", accentColor: "#222222" },
-  { id: "green", label: "White + Green", color: "#22C55E", bgColor: "#FFFFFF", accentColor: "#F2FCE2" },
-  { id: "teal", label: "White + Teal", color: "#14B8A6", bgColor: "#FFFFFF", accentColor: "#CCFBF1" },
 ];
 
 const Settings = () => {
@@ -42,132 +30,11 @@ const Settings = () => {
     { id: 1, url: "https://shadcn.com" },
     { id: 2, url: "http://twitter.com/shadcn" },
   ]);
-  const [selectedTheme, setSelectedTheme] = useState("default");
   const { toast } = useToast();
-
-  // Load saved theme on component mount
-  useEffect(() => {
-    const savedTheme = localStorage.getItem("admin-theme");
-    if (savedTheme) {
-      setSelectedTheme(savedTheme);
-      applyTheme(savedTheme);
-    }
-  }, []);
 
   const addNewUrl = () => {
     const newId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
     setUrls([...urls, { id: newId, url: "" }]);
-  };
-
-  const handleThemeChange = (value: string) => {
-    setSelectedTheme(value);
-    applyTheme(value);
-    
-    // Save theme preference to localStorage
-    localStorage.setItem("admin-theme", value);
-    
-    toast({
-      title: "Theme updated",
-      description: "Your theme preferences have been saved.",
-      duration: 3000,
-    });
-  };
-
-  const applyTheme = (themeId: string) => {
-    const theme = themeOptions.find(t => t.id === themeId);
-    if (!theme) return;
-
-    const root = document.documentElement;
-    
-    if (themeId === "dark") {
-      // Apply dark mode
-      document.body.classList.add("dark");
-      root.style.setProperty("--background", "224 71% 4%");
-      root.style.setProperty("--foreground", "213 31% 91%");
-      root.style.setProperty("--primary", "210 40% 98%");
-      root.style.setProperty("--primary-foreground", "222.2 47.4% 1.2%");
-      root.style.setProperty("--muted", "223 47% 11%");
-      root.style.setProperty("--muted-foreground", "215.4 16.3% 56.9%");
-      root.style.setProperty("--accent", "216 34% 17%");
-      root.style.setProperty("--accent-foreground", "210 40% 98%");
-      root.style.setProperty("--border", "216 34% 17%");
-      root.style.setProperty("--input", "216 34% 17%");
-      root.style.setProperty("--card", "224 71% 4%");
-      root.style.setProperty("--card-foreground", "213 31% 91%");
-    } else {
-      // Remove dark mode if it exists
-      document.body.classList.remove("dark");
-      
-      // Set default light mode values
-      root.style.setProperty("--background", "0 0% 100%");
-      root.style.setProperty("--foreground", "222.2 47.4% 11.2%");
-      
-      // Apply theme specific color
-      const hsl = hexToHSL(theme.color);
-      if (hsl) {
-        root.style.setProperty("--primary", `${hsl.h} ${hsl.s}% ${hsl.l}%`);
-        root.style.setProperty("--primary-foreground", "0 0% 100%");
-      }
-      
-      // Apply accent color
-      const accentHsl = hexToHSL(theme.accentColor);
-      if (accentHsl) {
-        root.style.setProperty("--accent", `${accentHsl.h} ${accentHsl.s}% ${accentHsl.l}%`);
-        root.style.setProperty("--accent-foreground", "222.2 47.4% 11.2%");
-      }
-    }
-  };
-
-  // Helper function to convert hex to HSL
-  const hexToHSL = (hex: string) => {
-    // Remove the # character if present
-    hex = hex.replace(/^#/, '');
-    
-    // Parse the hex values
-    let r = 0, g = 0, b = 0;
-    if (hex.length === 3) {
-      r = parseInt(hex[0] + hex[0], 16);
-      g = parseInt(hex[1] + hex[1], 16);
-      b = parseInt(hex[2] + hex[2], 16);
-    } else if (hex.length === 6) {
-      r = parseInt(hex.substring(0, 2), 16);
-      g = parseInt(hex.substring(2, 4), 16);
-      b = parseInt(hex.substring(4, 6), 16);
-    } else {
-      return null;
-    }
-    
-    // Convert RGB to HSL
-    r /= 255;
-    g /= 255;
-    b /= 255;
-    
-    const max = Math.max(r, g, b);
-    const min = Math.min(r, g, b);
-    let h = 0, s = 0, l = (max + min) / 2;
-    
-    if (max !== min) {
-      const d = max - min;
-      s = l > 0.5 ? d / (2 - max - min) : d / (max + min);
-      switch (max) {
-        case r:
-          h = (g - b) / d + (g < b ? 6 : 0);
-          break;
-        case g:
-          h = (b - r) / d + 2;
-          break;
-        case b:
-          h = (r - g) / d + 4;
-          break;
-      }
-      h /= 6;
-    }
-    
-    return {
-      h: Math.round(h * 360),
-      s: Math.round(s * 100),
-      l: Math.round(l * 100)
-    };
   };
 
   return (
@@ -270,62 +137,6 @@ const Settings = () => {
               <p className="text-muted-foreground">Manage your account preferences.</p>
               <Separator className="my-6" />
               <p className="text-muted-foreground">Account settings will be available soon.</p>
-            </div>
-          )}
-          
-          {activeTab === "appearance" && (
-            <div>
-              <h2 className="text-2xl font-semibold mb-1">Appearance</h2>
-              <p className="text-muted-foreground">Customize the appearance of the application.</p>
-              <Separator className="my-6" />
-              
-              <div className="max-w-3xl">
-                <div className="mb-6">
-                  <h3 className="text-lg font-medium mb-2">Theme</h3>
-                  <p className="text-muted-foreground text-sm mb-4">
-                    Choose a color theme to personalize your admin panel experience.
-                  </p>
-                  
-                  <RadioGroup 
-                    value={selectedTheme} 
-                    onValueChange={handleThemeChange}
-                    className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4 mt-2"
-                  >
-                    {themeOptions.map((theme) => (
-                      <label
-                        key={theme.id}
-                        className={`relative flex flex-col items-start border rounded-md p-4 cursor-pointer transition-all hover:border-primary ${
-                          selectedTheme === theme.id ? 'border-primary bg-primary/5' : 'border-border'
-                        }`}
-                      >
-                        <div className="flex justify-between items-center w-full">
-                          <RadioGroupItem value={theme.id} id={`theme-${theme.id}`} className="sr-only" />
-                          <span className="font-medium">{theme.label}</span>
-                          
-                          {selectedTheme === theme.id && (
-                            <Check className="h-4 w-4 text-primary" />
-                          )}
-                        </div>
-                        
-                        <div className="flex items-center gap-2 mt-3">
-                          <div 
-                            className="h-6 w-12 rounded-sm" 
-                            style={{ backgroundColor: theme.bgColor }}
-                          ></div>
-                          <div 
-                            className="h-6 w-6 rounded-sm" 
-                            style={{ backgroundColor: theme.color }}
-                          ></div>
-                          <div 
-                            className="h-6 w-6 rounded-sm" 
-                            style={{ backgroundColor: theme.accentColor }}
-                          ></div>
-                        </div>
-                      </label>
-                    ))}
-                  </RadioGroup>
-                </div>
-              </div>
             </div>
           )}
           
