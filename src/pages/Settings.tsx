@@ -4,14 +4,12 @@ import PageTitle from "@/components/shared/PageTitle";
 import { Separator } from "@/components/ui/separator";
 import SettingsSidebar from "@/components/settings/SettingsSidebar";
 import ProfileSettings from "@/components/settings/ProfileSettings";
-import AccountSettings from "@/components/settings/AccountSettings";
-import AppearanceSettings from "@/components/settings/AppearanceSettings";
 import SecuritySettings from "@/components/settings/SecuritySettings";
+import AppearanceSettings from "@/components/settings/AppearanceSettings";
 
 // Define navigation items for the settings sidebar (removed the "account" tab)
 const navItems = [
   { id: "profile", label: "Profile" },
-  { id: "account", label: "Account" },
   { id: "security", label: "Security" },
   { id: "appearance", label: "Appearance" },
 ];
@@ -71,10 +69,6 @@ const Settings = () => {
         <div className="flex-1">
           {activeTab === "profile" && (
             <ProfileSettings />
-          )}
-          
-          {activeTab === "account" && (
-            <AccountSettings />
           )}
 
           {activeTab === "security" && (
