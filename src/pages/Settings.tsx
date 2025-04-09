@@ -85,7 +85,36 @@ const Settings = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
+
+    // Apply font to document
+    if (savedFont) {
+      document.documentElement.style.fontFamily = getFontFamilyString(savedFont);
+    }
   }, []);
+
+  // Get font family string based on selected font
+  const getFontFamilyString = (fontName: string) => {
+    switch (fontName) {
+      case "inter":
+        return "'Inter', sans-serif";
+      case "roboto":
+        return "'Roboto', sans-serif";
+      case "opensans":
+        return "'Open Sans', sans-serif";
+      case "lato":
+        return "'Lato', sans-serif";
+      case "poppins":
+        return "'Poppins', sans-serif";
+      default:
+        return "'Inter', sans-serif";
+    }
+  };
+
+  // Handle font change
+  const handleFontChange = (newFont: string) => {
+    setFont(newFont);
+    document.documentElement.style.fontFamily = getFontFamilyString(newFont);
+  };
 
   // Handle theme change
   const handleThemeChange = (newTheme: string) => {
@@ -301,14 +330,20 @@ const Settings = () => {
               <div className="space-y-8 max-w-2xl">
                 <div>
                   <h3 className="text-lg font-medium mb-2">Font</h3>
-                  <Select value={font} onValueChange={setFont}>
+                  <Select value={font} onValueChange={handleFontChange}>
                     <SelectTrigger className="max-w-md">
                       <SelectValue placeholder="Select font" />
                     </SelectTrigger>
                     <SelectContent>
                       {fontOptions.map((option) => (
                         <SelectItem key={option.value} value={option.value}>
-                          {option.label}
+                          <span className={`${option.value === 'inter' ? 'font-sans' : 
+                                             option.value === 'roboto' ? 'font-["Roboto"]' : 
+                                             option.value === 'opensans' ? 'font-["Open_Sans"]' : 
+                                             option.value === 'lato' ? 'font-["Lato"]' : 
+                                             'font-["Poppins"]'}`}>
+                            {option.label}
+                          </span>
                         </SelectItem>
                       ))}
                     </SelectContent>
@@ -362,6 +397,19 @@ const Settings = () => {
                       </div>
                       <div className="text-center font-medium">Dark</div>
                     </div>
+                  </div>
+                </div>
+
+                <div className="pt-2">
+                  <h3 className="text-lg font-medium mb-2">Font Preview</h3>
+                  <div className={`border rounded-md p-6 max-w-md ${font === 'inter' ? 'font-sans' : 
+                                      font === 'roboto' ? 'font-["Roboto"]' : 
+                                      font === 'opensans' ? 'font-["Open_Sans"]' : 
+                                      font === 'lato' ? 'font-["Lato"]' : 
+                                      'font-["Poppins"]'}`}>
+                    <h4 className="text-lg font-bold mb-2">The quick brown fox jumps over the lazy dog</h4>
+                    <p className="text-sm">This is a preview of how text will look with your selected font. The quick brown fox jumps over the lazy dog.</p>
+                    <p className="text-xs mt-2">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</p>
                   </div>
                 </div>
                 
