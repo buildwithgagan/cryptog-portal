@@ -1,4 +1,3 @@
-
 import {
   AreaChart,
   Banknote,
@@ -20,6 +19,7 @@ import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import { Button } from "../ui/button";
 import { cn } from "@/lib/utils";
+import LogoutButton from "../auth/LogoutButton";
 
 type MenuItemType = {
   title: string;
@@ -178,13 +178,7 @@ const Sidebar = () => {
       </nav>
       
       <div className="p-4 border-t border-border">
-        <Button 
-          variant="ghost" 
-          className="w-full justify-start text-foreground/80 hover:text-destructive hover:bg-destructive/10"
-        >
-          <LogOut size={18} className="mr-2" />
-          <span>Logout</span>
-        </Button>
+        <LogoutButton />
       </div>
     </aside>
   );

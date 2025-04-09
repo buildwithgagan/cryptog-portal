@@ -1,31 +1,33 @@
 
 import { LogOut } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { useAuth } from "@/hooks/useAuth";
-import { useToast } from "@/hooks/use-toast";
+import { useState } from "react";
+import LogoutConfirmation from "./LogoutConfirmation";
 
 const LogoutButton = () => {
-  const { logout } = useAuth();
-  const { toast } = useToast();
+  const [showConfirmation, setShowConfirmation] = useState(false);
 
-  const handleLogout = () => {
-    logout();
-    toast({
-      title: "Logged Out",
-      description: "You have been successfully logged out.",
-    });
+  const handleLogoutClick = () => {
+    setShowConfirmation(true);
   };
 
   return (
-    <Button 
-      variant="ghost" 
-      size="sm" 
-      onClick={handleLogout}
-      className="text-muted-foreground hover:text-foreground"
-    >
-      <LogOut className="h-4 w-4 mr-2" />
-      Logout
-    </Button>
+    <>
+      <Button 
+        variant="ghost" 
+        size="sm" 
+        onClick={handleLogoutClick}
+        className="text-muted-foreground hover:text-foreground"
+      >
+        <LogOut className="h-4 w-4 mr-2" />
+        Logout
+      </Button>
+
+      <LogoutConfirmation 
+        isOpen={showConfirmation} 
+        onClose={() => setShowConfirmation(false)} 
+      />
+    </>
   );
 };
 
