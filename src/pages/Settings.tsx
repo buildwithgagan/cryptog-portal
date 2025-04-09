@@ -6,16 +6,18 @@ import SettingsSidebar from "@/components/settings/SettingsSidebar";
 import ProfileSettings from "@/components/settings/ProfileSettings";
 import AccountSettings from "@/components/settings/AccountSettings";
 import AppearanceSettings from "@/components/settings/AppearanceSettings";
+import SecuritySettings from "@/components/settings/SecuritySettings";
 
-// Define navigation items for the settings sidebar (removed notifications and display)
+// Define navigation items for the settings sidebar (removed the "account" tab)
 const navItems = [
   { id: "profile", label: "Profile" },
   { id: "account", label: "Account" },
+  { id: "security", label: "Security" },
   { id: "appearance", label: "Appearance" },
 ];
 
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState("profile"); // Changed to default to profile
+  const [activeTab, setActiveTab] = useState("profile"); // Default to profile
   const [theme, setTheme] = useState("light");
   const [urls, setUrls] = useState([
     { id: 1, url: "https://shadcn.com" },
@@ -73,6 +75,10 @@ const Settings = () => {
           
           {activeTab === "account" && (
             <AccountSettings />
+          )}
+
+          {activeTab === "security" && (
+            <SecuritySettings />
           )}
           
           {activeTab === "appearance" && (
