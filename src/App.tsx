@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -22,6 +23,7 @@ import Login from "./pages/Login";
 import VerifyOTP from "./pages/VerifyOTP";
 import Settings from "./pages/Settings";
 import Notifications from "./pages/Notifications";
+import Subscribers from "./pages/Subscribers";
 import { AreaChart, Users as UsersIcon, Trophy } from "lucide-react";
 
 const App = () => {
@@ -55,6 +57,7 @@ const App = () => {
               <Route path="users" element={<Users />} />
               <Route path="settings" element={<Settings />} />
               <Route path="notifications" element={<Notifications />} />
+              <Route path="subscribers" element={<Subscribers />} />
               
               {/* Cryptog subpages */}
               <Route path="cryptog/assets" element={<CryptogAssets />} />
