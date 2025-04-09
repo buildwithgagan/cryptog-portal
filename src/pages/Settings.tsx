@@ -49,21 +49,11 @@ const languageOptions = [
   { value: "zh", label: "Chinese" },
 ];
 
-// Font options
-const fontOptions = [
-  { value: "inter", label: "Inter" },
-  { value: "roboto", label: "Roboto" },
-  { value: "opensans", label: "Open Sans" },
-  { value: "lato", label: "Lato" },
-  { value: "poppins", label: "Poppins" },
-];
-
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("account");
   const [name, setName] = useState("John Doe");
   const [date, setDate] = useState<Date>();
   const [language, setLanguage] = useState("en");
-  const [font, setFont] = useState("inter");
   const [theme, setTheme] = useState("light");
   const [urls, setUrls] = useState([
     { id: 1, url: "https://shadcn.com" },
@@ -73,10 +63,8 @@ const Settings = () => {
 
   // Initialize user preferences from localStorage on component mount
   useEffect(() => {
-    const savedFont = localStorage.getItem("userFont");
     const savedTheme = localStorage.getItem("userTheme");
     
-    if (savedFont) setFont(savedFont);
     if (savedTheme) setTheme(savedTheme);
 
     // Apply theme to document
@@ -85,36 +73,7 @@ const Settings = () => {
     } else {
       document.documentElement.classList.remove("dark");
     }
-
-    // Apply font to document
-    if (savedFont) {
-      document.documentElement.style.fontFamily = getFontFamilyString(savedFont);
-    }
   }, []);
-
-  // Get font family string based on selected font
-  const getFontFamilyString = (fontName: string) => {
-    switch (fontName) {
-      case "inter":
-        return "'Inter', sans-serif";
-      case "roboto":
-        return "'Roboto', sans-serif";
-      case "opensans":
-        return "'Open Sans', sans-serif";
-      case "lato":
-        return "'Lato', sans-serif";
-      case "poppins":
-        return "'Poppins', sans-serif";
-      default:
-        return "'Inter', sans-serif";
-    }
-  };
-
-  // Handle font change
-  const handleFontChange = (newFont: string) => {
-    setFont(newFont);
-    document.documentElement.style.fontFamily = getFontFamilyString(newFont);
-  };
 
   // Handle theme change
   const handleThemeChange = (newTheme: string) => {
@@ -140,7 +99,6 @@ const Settings = () => {
 
   const handleUpdateAppearance = () => {
     // Save preferences to localStorage
-    localStorage.setItem("userFont", font);
     localStorage.setItem("userTheme", theme);
     
     toast({
@@ -329,31 +287,6 @@ const Settings = () => {
               
               <div className="space-y-8 max-w-2xl">
                 <div>
-                  <h3 className="text-lg font-medium mb-2">Font</h3>
-                  <Select value={font} onValueChange={handleFontChange}>
-                    <SelectTrigger className="max-w-md">
-                      <SelectValue placeholder="Select font" />
-                    </SelectTrigger>
-                    <SelectContent>
-                      {fontOptions.map((option) => (
-                        <SelectItem key={option.value} value={option.value}>
-                          <span className={`${option.value === 'inter' ? 'font-sans' : 
-                                             option.value === 'roboto' ? 'font-["Roboto"]' : 
-                                             option.value === 'opensans' ? 'font-["Open_Sans"]' : 
-                                             option.value === 'lato' ? 'font-["Lato"]' : 
-                                             'font-["Poppins"]'}`}>
-                            {option.label}
-                          </span>
-                        </SelectItem>
-                      ))}
-                    </SelectContent>
-                  </Select>
-                  <p className="text-sm text-muted-foreground mt-2">
-                    Set the font you want to use in the dashboard.
-                  </p>
-                </div>
-                
-                <div>
                   <h3 className="text-lg font-medium mb-2">Theme</h3>
                   <p className="text-sm text-muted-foreground mb-4">
                     Select the theme for the dashboard.
@@ -397,19 +330,6 @@ const Settings = () => {
                       </div>
                       <div className="text-center font-medium">Dark</div>
                     </div>
-                  </div>
-                </div>
-
-                <div className="pt-2">
-                  <h3 className="text-lg font-medium mb-2">Font Preview</h3>
-                  <div className={`border rounded-md p-6 max-w-md ${font === 'inter' ? 'font-sans' : 
-                                      font === 'roboto' ? 'font-["Roboto"]' : 
-                                      font === 'opensans' ? 'font-["Open_Sans"]' : 
-                                      font === 'lato' ? 'font-["Lato"]' : 
-                                      'font-["Poppins"]'}`}>
-                    <h4 className="text-lg font-bold mb-2">The quick brown fox jumps over the lazy dog</h4>
-                    <p className="text-sm">This is a preview of how text will look with your selected font. The quick brown fox jumps over the lazy dog.</p>
-                    <p className="text-xs mt-2">ABCDEFGHIJKLMNOPQRSTUVWXYZ abcdefghijklmnopqrstuvwxyz 0123456789</p>
                   </div>
                 </div>
                 
