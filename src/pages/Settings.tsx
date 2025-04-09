@@ -15,7 +15,7 @@ const navItems = [
 ];
 
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState("account");
+  const [activeTab, setActiveTab] = useState("profile"); // Changed to default to profile
   const [theme, setTheme] = useState("light");
   const [urls, setUrls] = useState([
     { id: 1, url: "https://shadcn.com" },
@@ -68,7 +68,7 @@ const Settings = () => {
         {/* Main content area */}
         <div className="flex-1">
           {activeTab === "profile" && (
-            <ProfileSettings urls={urls} addNewUrl={addNewUrl} />
+            <ProfileSettings />
           )}
           
           {activeTab === "account" && (
