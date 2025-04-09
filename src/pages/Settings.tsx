@@ -1,5 +1,7 @@
 
 import { useState, useEffect } from "react";
+import { format } from "date-fns";
+import { CalendarIcon } from "lucide-react";
 import PageTitle from "@/components/shared/PageTitle";
 import { Separator } from "@/components/ui/separator";
 import { Input } from "@/components/ui/input";
@@ -13,8 +15,13 @@ import {
 } from "@/components/ui/select";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/components/ui/use-toast";
-import { Tabs, TabsList, TabsTrigger, TabsContent } from "@/components/ui/tabs";
-import { Check } from "lucide-react";
+import {
+  Popover,
+  PopoverContent,
+  PopoverTrigger,
+} from "@/components/ui/popover";
+import { Calendar } from "@/components/ui/calendar";
+import { cn } from "@/lib/utils";
 
 // Define navigation items for the settings sidebar
 const navItems = [
@@ -24,8 +31,20 @@ const navItems = [
   { id: "display", label: "Display" },
 ];
 
+// Language options
+const languageOptions = [
+  { value: "en", label: "English" },
+  { value: "es", label: "Spanish" },
+  { value: "fr", label: "French" },
+  { value: "de", label: "German" },
+  { value: "zh", label: "Chinese" },
+];
+
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState("profile");
+  const [activeTab, setActiveTab] = useState("account"); // Changed default tab to account
+  const [name, setName] = useState("John Doe");
+  const [date, setDate] = useState<Date>();
+  const [language, setLanguage] = useState("en");
   const [urls, setUrls] = useState([
     { id: 1, url: "https://shadcn.com" },
     { id: 2, url: "http://twitter.com/shadcn" },
@@ -35,6 +54,13 @@ const Settings = () => {
   const addNewUrl = () => {
     const newId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
     setUrls([...urls, { id: newId, url: "" }]);
+  };
+
+  const handleUpdateAccount = () => {
+    toast({
+      title: "Account updated",
+      description: "Your account has been updated successfully.",
+    });
   };
 
   return (
@@ -134,9 +160,78 @@ const Settings = () => {
           {activeTab === "account" && (
             <div>
               <h2 className="text-2xl font-semibold mb-1">Account</h2>
-              <p className="text-muted-foreground">Manage your account preferences.</p>
+              <p className="text-muted-foreground">Update your account settings. Set your preferred language and timezone.</p>
               <Separator className="my-6" />
-              <p className="text-muted-foreground">Account settings will be available soon.</p>
+              
+              <div className="space-y-8 max-w-2xl">
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Name</label>
+                  <Input 
+                    value={name} 
+                    onChange={(e) => setName(e.target.value)} 
+                    className="max-w-md" 
+                    placeholder="Your name" 
+                  />
+                  <p className="text-sm text-muted-foreground mt-2">
+                    This is the name that will be displayed on your profile and in emails.
+                  </p>
+                </div>
+                
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Date of birth</label>
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <Button
+                        variant={"outline"}
+                        className={cn(
+                          "w-full max-w-md justify-start text-left font-normal",
+                          !date && "text-muted-foreground"
+                        )}
+                      >
+                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={date}
+                        onSelect={setDate}
+                        initialFocus
+                        className={cn("p-3 pointer-events-auto")}
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Your date of birth is used to calculate your age.
+                  </p>
+                </div>
+
+                <div>
+                  <label className="text-sm font-medium mb-2 block">Language</label>
+                  <Select value={language} onValueChange={setLanguage}>
+                    <SelectTrigger className="max-w-md">
+                      <SelectValue placeholder="Select language" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {languageOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    This is the language that will be used in the dashboard.
+                  </p>
+                </div>
+
+                <div>
+                  <Button onClick={handleUpdateAccount} className="bg-black hover:bg-black/80 text-white">
+                    Update account
+                  </Button>
+                </div>
+              </div>
             </div>
           )}
           
