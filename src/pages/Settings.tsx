@@ -6,16 +6,12 @@ import SettingsSidebar from "@/components/settings/SettingsSidebar";
 import ProfileSettings from "@/components/settings/ProfileSettings";
 import AccountSettings from "@/components/settings/AccountSettings";
 import AppearanceSettings from "@/components/settings/AppearanceSettings";
-import NotificationsSettings from "@/components/settings/NotificationsSettings";
-import DisplaySettings from "@/components/settings/DisplaySettings";
 
-// Define navigation items for the settings sidebar
+// Define navigation items for the settings sidebar (removed notifications and display)
 const navItems = [
   { id: "profile", label: "Profile" },
   { id: "account", label: "Account" },
   { id: "appearance", label: "Appearance" },
-  { id: "notifications", label: "Notifications" },
-  { id: "display", label: "Display" },
 ];
 
 const Settings = () => {
@@ -84,14 +80,6 @@ const Settings = () => {
               theme={theme} 
               handleThemeChange={handleThemeChange} 
             />
-          )}
-          
-          {activeTab === "notifications" && (
-            <NotificationsSettings />
-          )}
-          
-          {activeTab === "display" && (
-            <DisplaySettings />
           )}
         </div>
       </div>
