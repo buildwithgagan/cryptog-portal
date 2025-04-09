@@ -2,17 +2,10 @@
 import { useState, useEffect } from "react";
 import PageTitle from "@/components/shared/PageTitle";
 import { Separator } from "@/components/ui/separator";
-import SettingsSidebar from "@/components/settings/SettingsSidebar";
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import ProfileSettings from "@/components/settings/ProfileSettings";
 import SecuritySettings from "@/components/settings/SecuritySettings";
 import AppearanceSettings from "@/components/settings/AppearanceSettings";
-
-// Define navigation items for the settings sidebar (removed the "account" tab)
-const navItems = [
-  { id: "profile", label: "Profile" },
-  { id: "security", label: "Security" },
-  { id: "appearance", label: "Appearance" },
-];
 
 const Settings = () => {
   const [activeTab, setActiveTab] = useState("profile"); // Default to profile
@@ -57,32 +50,28 @@ const Settings = () => {
       
       <Separator className="my-6" />
       
-      <div className="flex flex-col md:flex-row gap-6">
-        {/* Settings navigation sidebar */}
-        <SettingsSidebar 
-          navItems={navItems} 
-          activeTab={activeTab} 
-          setActiveTab={setActiveTab} 
-        />
-        
-        {/* Main content area */}
-        <div className="flex-1">
-          {activeTab === "profile" && (
-            <ProfileSettings />
-          )}
+      <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
+        <TabsList className="w-full max-w-md mb-6">
+          <TabsTrigger value="profile" className="flex-1">Profile</TabsTrigger>
+          <TabsTrigger value="security" className="flex-1">Security</TabsTrigger>
+          <TabsTrigger value="appearance" className="flex-1">Appearance</TabsTrigger>
+        </TabsList>
 
-          {activeTab === "security" && (
-            <SecuritySettings />
-          )}
-          
-          {activeTab === "appearance" && (
-            <AppearanceSettings 
-              theme={theme} 
-              handleThemeChange={handleThemeChange} 
-            />
-          )}
-        </div>
-      </div>
+        <TabsContent value="profile">
+          <ProfileSettings />
+        </TabsContent>
+
+        <TabsContent value="security">
+          <SecuritySettings />
+        </TabsContent>
+        
+        <TabsContent value="appearance">
+          <AppearanceSettings 
+            theme={theme} 
+            handleThemeChange={handleThemeChange} 
+          />
+        </TabsContent>
+      </Tabs>
     </div>
   );
 };
