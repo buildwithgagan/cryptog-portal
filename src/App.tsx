@@ -21,6 +21,7 @@ import CryptogContest from "./pages/CryptogContest";
 import Login from "./pages/Login";
 import VerifyOTP from "./pages/VerifyOTP";
 import Settings from "./pages/Settings";
+import Notifications from "./pages/Notifications";
 import { AreaChart, Users as UsersIcon, Trophy } from "lucide-react";
 
 const App = () => {
@@ -53,6 +54,7 @@ const App = () => {
               <Route path="stock-fantasy" element={<StockFantasy />} />
               <Route path="users" element={<Users />} />
               <Route path="settings" element={<Settings />} />
+              <Route path="notifications" element={<Notifications />} />
               
               {/* Cryptog subpages */}
               <Route path="cryptog/assets" element={<CryptogAssets />} />
