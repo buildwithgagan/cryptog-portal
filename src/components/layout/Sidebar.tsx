@@ -13,7 +13,8 @@ import {
   Puzzle,
   Settings,
   ShieldCheck,
-  Users
+  Users,
+  Trophy
 } from "lucide-react";
 import { useState } from "react";
 import { Link, useLocation } from "react-router-dom";
@@ -53,9 +54,9 @@ const menuItems: MenuItemType[] = [
     path: "/stock-fantasy",
     icon: <AreaChart size={20} />,
     submenu: [
-      { title: "Manage Assets", path: "/stock-fantasy/assets" },
-      { title: "Manage Team", path: "/stock-fantasy/team" },
-      { title: "Manage Contest", path: "/stock-fantasy/contest" }
+      { title: "Manage Assets", path: "/stock-fantasy/manage-asset" },
+      { title: "Manage Teams", path: "/stock-fantasy/manage-team" },
+      { title: "Manage Contests", path: "/stock-fantasy/manage-contest" }
     ]
   },
   {

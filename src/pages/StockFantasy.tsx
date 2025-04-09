@@ -1,6 +1,7 @@
 
 import ComingSoon from "@/components/shared/ComingSoon";
 import PageTitle from "@/components/shared/PageTitle";
+import { AreaChart } from "lucide-react";
 
 const StockFantasy = () => {
   return (
@@ -13,6 +14,7 @@ const StockFantasy = () => {
       <ComingSoon 
         title="Stock Fantasy Platform Coming Soon" 
         description="We're working on an exciting new fantasy stock trading platform that will allow users to test their market prediction skills and compete for prizes."
+        icon={AreaChart}
       />
     </div>
   );

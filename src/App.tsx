@@ -1,3 +1,4 @@
+
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -20,6 +21,7 @@ import CryptogTeam from "./pages/CryptogTeam";
 import CryptogContest from "./pages/CryptogContest";
 import Login from "./pages/Login";
 import VerifyOTP from "./pages/VerifyOTP";
+import { AreaChart, Users as UsersIcon, Trophy } from "lucide-react";
 
 const App = () => {
   // Create a new QueryClient instance inside the component
@@ -56,10 +58,56 @@ const App = () => {
               <Route path="cryptog/team" element={<CryptogTeam />} />
               <Route path="cryptog/contest" element={<CryptogContest />} />
               
-              {/* Stock Fantasy subpages */}
-              <Route path="stock-fantasy/assets" element={<ComingSoon title="Stock Fantasy Assets" description="Manage stock assets for the Stock Fantasy platform." />} />
-              <Route path="stock-fantasy/team" element={<ComingSoon title="Stock Fantasy Teams" description="Manage teams for the Stock Fantasy platform." />} />
-              <Route path="stock-fantasy/contest" element={<ComingSoon title="Stock Fantasy Contests" description="Manage contests for the Stock Fantasy platform." />} />
+              {/* Stock Fantasy subpages - both old and new routes for compatibility */}
+              {/* Original paths */}
+              <Route path="stock-fantasy/assets" element={
+                <ComingSoon 
+                  title="Stock Fantasy Assets" 
+                  description="Manage stock assets for the Stock Fantasy platform." 
+                  icon={AreaChart}
+                />
+              } />
+              
+              <Route path="stock-fantasy/team" element={
+                <ComingSoon 
+                  title="Stock Fantasy Teams" 
+                  description="Manage teams for the Stock Fantasy platform." 
+                  icon={UsersIcon}
+                />
+              } />
+              
+              <Route path="stock-fantasy/contest" element={
+                <ComingSoon 
+                  title="Stock Fantasy Contests" 
+                  description="Manage contests for the Stock Fantasy platform." 
+                  icon={Trophy}
+                />
+              } />
+              
+              {/* New paths as requested */}
+              <Route path="stock-fantasy/manage-asset" element={
+                <ComingSoon 
+                  title="Stock Fantasy Assets" 
+                  description="This section is under development and will be available soon." 
+                  icon={AreaChart}
+                />
+              } />
+              
+              <Route path="stock-fantasy/manage-team" element={
+                <ComingSoon 
+                  title="Stock Fantasy Teams" 
+                  description="This section is under development and will be available soon." 
+                  icon={UsersIcon}
+                />
+              } />
+              
+              <Route path="stock-fantasy/manage-contest" element={
+                <ComingSoon 
+                  title="Stock Fantasy Contests" 
+                  description="This section is under development and will be available soon." 
+                  icon={Trophy}
+                />
+              } />
               
               {/* ICO subpages */}
               <Route path="ico/investors" element={<ComingSoon title="ICO Investors" description="Manage and track investors for your ICO." />} />
