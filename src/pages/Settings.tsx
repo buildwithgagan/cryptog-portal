@@ -29,6 +29,7 @@ import {
   TabsTrigger,
 } from "@/components/ui/tabs";
 import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
+import { Switch } from "@/components/ui/switch";
 
 // Define navigation items for the settings sidebar
 const navItems = [
@@ -77,7 +78,24 @@ const Settings = () => {
     
     if (savedFont) setFont(savedFont);
     if (savedTheme) setTheme(savedTheme);
+
+    // Apply theme to document
+    if (savedTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
   }, []);
+
+  // Handle theme change
+  const handleThemeChange = (newTheme: string) => {
+    setTheme(newTheme);
+    if (newTheme === "dark") {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  };
 
   const addNewUrl = () => {
     const newId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
@@ -309,7 +327,7 @@ const Settings = () => {
                   <div className="grid grid-cols-2 gap-4 max-w-md">
                     <div 
                       className={`border rounded-md p-4 cursor-pointer ${theme === 'light' ? 'ring-2 ring-primary' : ''}`}
-                      onClick={() => setTheme('light')}
+                      onClick={() => handleThemeChange('light')}
                     >
                       <div className="bg-white border rounded-md h-28 mb-2 flex flex-col p-3">
                         <div className="w-2/3 h-2 bg-gray-200 rounded mb-2"></div>
@@ -328,7 +346,7 @@ const Settings = () => {
                     
                     <div 
                       className={`border rounded-md p-4 cursor-pointer ${theme === 'dark' ? 'ring-2 ring-primary' : ''}`}
-                      onClick={() => setTheme('dark')}
+                      onClick={() => handleThemeChange('dark')}
                     >
                       <div className="bg-gray-900 border border-gray-800 rounded-md h-28 mb-2 flex flex-col p-3">
                         <div className="w-2/3 h-2 bg-gray-700 rounded mb-2"></div>
@@ -348,7 +366,7 @@ const Settings = () => {
                 </div>
                 
                 <div>
-                  <Button onClick={handleUpdateAppearance} className="bg-black hover:bg-black/80 text-white">
+                  <Button onClick={handleUpdateAppearance} className="bg-black hover:bg-black/80 text-white dark:bg-white dark:text-black dark:hover:bg-white/80">
                     Update preferences
                   </Button>
                 </div>
