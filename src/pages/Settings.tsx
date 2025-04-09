@@ -22,11 +22,19 @@ import {
 } from "@/components/ui/popover";
 import { Calendar } from "@/components/ui/calendar";
 import { cn } from "@/lib/utils";
+import {
+  Tabs,
+  TabsContent,
+  TabsList,
+  TabsTrigger,
+} from "@/components/ui/tabs";
+import { RadioGroup, RadioGroupItem } from "@/components/ui/radio-group";
 
 // Define navigation items for the settings sidebar
 const navItems = [
   { id: "profile", label: "Profile" },
   { id: "account", label: "Account" },
+  { id: "appearance", label: "Appearance" },
   { id: "notifications", label: "Notifications" },
   { id: "display", label: "Display" },
 ];
@@ -40,16 +48,36 @@ const languageOptions = [
   { value: "zh", label: "Chinese" },
 ];
 
+// Font options
+const fontOptions = [
+  { value: "inter", label: "Inter" },
+  { value: "roboto", label: "Roboto" },
+  { value: "opensans", label: "Open Sans" },
+  { value: "lato", label: "Lato" },
+  { value: "poppins", label: "Poppins" },
+];
+
 const Settings = () => {
-  const [activeTab, setActiveTab] = useState("account"); // Changed default tab to account
+  const [activeTab, setActiveTab] = useState("account");
   const [name, setName] = useState("John Doe");
   const [date, setDate] = useState<Date>();
   const [language, setLanguage] = useState("en");
+  const [font, setFont] = useState("inter");
+  const [theme, setTheme] = useState("light");
   const [urls, setUrls] = useState([
     { id: 1, url: "https://shadcn.com" },
     { id: 2, url: "http://twitter.com/shadcn" },
   ]);
   const { toast } = useToast();
+
+  // Initialize user preferences from localStorage on component mount
+  useEffect(() => {
+    const savedFont = localStorage.getItem("userFont");
+    const savedTheme = localStorage.getItem("userTheme");
+    
+    if (savedFont) setFont(savedFont);
+    if (savedTheme) setTheme(savedTheme);
+  }, []);
 
   const addNewUrl = () => {
     const newId = urls.length > 0 ? Math.max(...urls.map(u => u.id)) + 1 : 1;
@@ -60,6 +88,17 @@ const Settings = () => {
     toast({
       title: "Account updated",
       description: "Your account has been updated successfully.",
+    });
+  };
+
+  const handleUpdateAppearance = () => {
+    // Save preferences to localStorage
+    localStorage.setItem("userFont", font);
+    localStorage.setItem("userTheme", theme);
+    
+    toast({
+      title: "Appearance preferences updated",
+      description: "Your appearance settings have been updated successfully.",
     });
   };
 
@@ -229,6 +268,88 @@ const Settings = () => {
                 <div>
                   <Button onClick={handleUpdateAccount} className="bg-black hover:bg-black/80 text-white">
                     Update account
+                  </Button>
+                </div>
+              </div>
+            </div>
+          )}
+          
+          {activeTab === "appearance" && (
+            <div>
+              <h2 className="text-2xl font-semibold mb-1">Appearance</h2>
+              <p className="text-muted-foreground">Customize the appearance of the app. Automatically switch between day and night themes.</p>
+              <Separator className="my-6" />
+              
+              <div className="space-y-8 max-w-2xl">
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Font</h3>
+                  <Select value={font} onValueChange={setFont}>
+                    <SelectTrigger className="max-w-md">
+                      <SelectValue placeholder="Select font" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      {fontOptions.map((option) => (
+                        <SelectItem key={option.value} value={option.value}>
+                          {option.label}
+                        </SelectItem>
+                      ))}
+                    </SelectContent>
+                  </Select>
+                  <p className="text-sm text-muted-foreground mt-2">
+                    Set the font you want to use in the dashboard.
+                  </p>
+                </div>
+                
+                <div>
+                  <h3 className="text-lg font-medium mb-2">Theme</h3>
+                  <p className="text-sm text-muted-foreground mb-4">
+                    Select the theme for the dashboard.
+                  </p>
+                  
+                  <div className="grid grid-cols-2 gap-4 max-w-md">
+                    <div 
+                      className={`border rounded-md p-4 cursor-pointer ${theme === 'light' ? 'ring-2 ring-primary' : ''}`}
+                      onClick={() => setTheme('light')}
+                    >
+                      <div className="bg-white border rounded-md h-28 mb-2 flex flex-col p-3">
+                        <div className="w-2/3 h-2 bg-gray-200 rounded mb-2"></div>
+                        <div className="w-1/2 h-2 bg-gray-200 rounded mb-3"></div>
+                        <div className="flex items-center gap-2 mt-auto">
+                          <div className="w-4 h-4 rounded-full bg-gray-200"></div>
+                          <div className="w-16 h-2 bg-gray-200 rounded"></div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="w-4 h-4 rounded-full bg-gray-200"></div>
+                          <div className="w-20 h-2 bg-gray-200 rounded"></div>
+                        </div>
+                      </div>
+                      <div className="text-center font-medium">Light</div>
+                    </div>
+                    
+                    <div 
+                      className={`border rounded-md p-4 cursor-pointer ${theme === 'dark' ? 'ring-2 ring-primary' : ''}`}
+                      onClick={() => setTheme('dark')}
+                    >
+                      <div className="bg-gray-900 border border-gray-800 rounded-md h-28 mb-2 flex flex-col p-3">
+                        <div className="w-2/3 h-2 bg-gray-700 rounded mb-2"></div>
+                        <div className="w-1/2 h-2 bg-gray-700 rounded mb-3"></div>
+                        <div className="flex items-center gap-2 mt-auto">
+                          <div className="w-4 h-4 rounded-full bg-gray-600"></div>
+                          <div className="w-16 h-2 bg-gray-700 rounded"></div>
+                        </div>
+                        <div className="flex items-center gap-2 mt-2">
+                          <div className="w-4 h-4 rounded-full bg-gray-600"></div>
+                          <div className="w-20 h-2 bg-gray-700 rounded"></div>
+                        </div>
+                      </div>
+                      <div className="text-center font-medium">Dark</div>
+                    </div>
+                  </div>
+                </div>
+                
+                <div>
+                  <Button onClick={handleUpdateAppearance} className="bg-black hover:bg-black/80 text-white">
+                    Update preferences
                   </Button>
                 </div>
               </div>
