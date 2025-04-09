@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -21,6 +20,7 @@ import CryptogTeam from "./pages/CryptogTeam";
 import CryptogContest from "./pages/CryptogContest";
 import Login from "./pages/Login";
 import VerifyOTP from "./pages/VerifyOTP";
+import Settings from "./pages/Settings";
 import { AreaChart, Users as UsersIcon, Trophy } from "lucide-react";
 
 const App = () => {
@@ -52,6 +52,7 @@ const App = () => {
               <Route path="ico" element={<ICO />} />
               <Route path="stock-fantasy" element={<StockFantasy />} />
               <Route path="users" element={<Users />} />
+              <Route path="settings" element={<Settings />} />
               
               {/* Cryptog subpages */}
               <Route path="cryptog/assets" element={<CryptogAssets />} />
@@ -59,7 +60,6 @@ const App = () => {
               <Route path="cryptog/contest" element={<CryptogContest />} />
               
               {/* Stock Fantasy subpages - both old and new routes for compatibility */}
-              {/* Original paths */}
               <Route path="stock-fantasy/assets" element={
                 <ComingSoon 
                   title="Stock Fantasy Assets" 
@@ -116,7 +116,6 @@ const App = () => {
               {/* Other pages */}
               <Route path="subscribers" element={<ComingSoon title="Subscribers" description="Manage your newsletter subscribers." />} />
               <Route path="notifications" element={<ComingSoon title="Notifications" description="Manage platform notifications." />} />
-              <Route path="settings" element={<ComingSoon title="Settings" description="Configure platform-level settings." />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Routes>
