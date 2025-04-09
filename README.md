@@ -1,69 +1,53 @@
-# Welcome to your Lovable project
+# Cryptog Admin Panel
 
-## Project info
+A modern, secure, and efficient admin panel for managing Cryptog platform operations.
 
-**URL**: https://lovable.dev/projects/ae8afdfc-fd35-423e-85e0-5163d758fef0
+## Live Preview
 
-## How can I edit this code?
+**URL**: https://admin.cryptog.online/login
 
-There are several ways of editing your application.
+## Getting Started
 
-**Use Lovable**
-
-Simply visit the [Lovable Project](https://lovable.dev/projects/ae8afdfc-fd35-423e-85e0-5163d758fef0) and start prompting.
-
-Changes made via Lovable will be committed automatically to this repo.
-
-**Use your preferred IDE**
-
-If you want to work locally using your own IDE, you can clone this repo and push changes. Pushed changes will also be reflected in Lovable.
-
-The only requirement is having Node.js & npm installed - [install with nvm](https://github.com/nvm-sh/nvm#installing-and-updating)
-
-Follow these steps:
+To get started with the Cryptog Admin Panel, follow these steps:
 
 ```sh
-# Step 1: Clone the repository using the project's Git URL.
+# Step 1: Clone the repository
 git clone <YOUR_GIT_URL>
 
-# Step 2: Navigate to the project directory.
-cd <YOUR_PROJECT_NAME>
+# Step 2: Navigate to the project directory
+cd cryptog-portal
 
-# Step 3: Install the necessary dependencies.
-npm i
+# Step 3: Install dependencies
+npm install
 
-# Step 4: Start the development server with auto-reloading and an instant preview.
+# Step 4: Start the development server
 npm run dev
 ```
 
-**Edit a file directly in GitHub**
+## Technology Stack
 
-- Navigate to the desired file(s).
-- Click the "Edit" button (pencil icon) at the top right of the file view.
-- Make your changes and commit the changes.
+The Cryptog Admin Panel is built with modern web technologies:
 
-**Use GitHub Codespaces**
+- Vite - Next Generation Frontend Tooling
+- TypeScript - Type-safe JavaScript
+- React - UI Library
+- shadcn-ui - Beautiful UI Components
+- Tailwind CSS - Utility-first CSS framework
 
-- Navigate to the main page of your repository.
-- Click on the "Code" button (green button) near the top right.
-- Select the "Codespaces" tab.
-- Click on "New codespace" to launch a new Codespace environment.
-- Edit files directly within the Codespace and commit and push your changes once you're done.
+## Development
 
-## What technologies are used for this project?
+The project uses a modern development setup with:
 
-This project is built with .
+- Hot Module Replacement (HMR)
+- TypeScript support
+- ESLint for code linting
+- Prettier for code formatting
+- Tailwind CSS for styling
 
-- Vite
-- TypeScript
-- React
-- shadcn-ui
-- Tailwind CSS
+## Deployment
 
-## How can I deploy this project?
+The admin panel is deployed at https://admin.cryptog.online. For deployment instructions, please contact the development team.
 
-Simply open [Lovable](https://lovable.dev/projects/ae8afdfc-fd35-423e-85e0-5163d758fef0) and click on Share -> Publish.
+## Support
 
-## I want to use a custom domain - is that possible?
-
-We don't support custom domains (yet). If you want to deploy your project under your own domain then we recommend using Netlify. Visit our docs for more details: [Custom domains](https://docs.lovable.dev/tips-tricks/custom-domain/)
+For any questions or support, please reach out to the development team.
