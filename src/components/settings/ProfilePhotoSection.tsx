@@ -48,16 +48,42 @@ const ProfilePhotoSection = ({ form, formSchema }: ProfilePhotoSectionProps) => 
 
     setUploading(true);
 
-    // Convert file to data URL for preview
+    // Validate square dimensions using FileReader and Image
     const reader = new FileReader();
-    reader.onloadend = () => {
-      form.setValue("profilePhoto", reader.result as string);
-      setUploading(false);
-      toast({
-        title: "Photo Uploaded",
-        description: "Your profile photo has been successfully uploaded.",
-      });
+    reader.onload = (e) => {
+      const img = new Image();
+      img.onload = () => {
+        if (img.width !== img.height) {
+          setUploading(false);
+          toast({
+            title: "Invalid image dimensions",
+            description: "Please upload a square image (equal width and height).",
+            variant: "destructive",
+          });
+          return;
+        }
+        
+        // If all validations pass, set the image
+        form.setValue("profilePhoto", reader.result as string);
+        setUploading(false);
+        toast({
+          title: "Photo Uploaded",
+          description: "Your profile photo has been successfully uploaded.",
+        });
+      };
+      
+      img.onerror = () => {
+        setUploading(false);
+        toast({
+          title: "Error loading image",
+          description: "There was an error processing your image. Please try another one.",
+          variant: "destructive",
+        });
+      };
+      
+      img.src = e.target?.result as string;
     };
+    
     reader.readAsDataURL(file);
   };
 
@@ -175,7 +201,7 @@ const ProfilePhotoSection = ({ form, formSchema }: ProfilePhotoSectionProps) => 
               </div>
               
               <p className="text-sm text-muted-foreground max-w-md">
-                Upload a profile picture (PNG, JPG, JPEG, GIF, SVG). Max size: 3MB. Recommended size: 200x200 px.
+                Upload a square profile picture (PNG, JPG, JPEG, GIF, SVG). Max size: 3MB. Recommended size: 200x200 px.
               </p>
             </div>
           </div>
