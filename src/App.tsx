@@ -1,4 +1,3 @@
-
 import { Toaster } from "@/components/ui/toaster";
 import { Toaster as Sonner } from "@/components/ui/sonner";
 import { TooltipProvider } from "@/components/ui/tooltip";
@@ -12,7 +11,8 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Cryptog from "./pages/Cryptog";
 import ICO from "./pages/ICO";
-import ICOInvestors from "./pages/ICOInvestors"; // Added import for ICOInvestors
+import ICOInvestors from "./pages/ICOInvestors";
+import ICOToken from "./pages/ICOToken"; // Import the ICOToken component
 import StockFantasy from "./pages/StockFantasy";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
@@ -117,7 +117,7 @@ const App = () => {
               
               {/* ICO subpages */}
               <Route path="ico/investors" element={<ICOInvestors />} />
-              <Route path="ico/token" element={<ComingSoon title="Token Management" description="Configure and manage your token settings." />} />
+              <Route path="ico/token" element={<ICOToken />} /> {/* Updated to use ICOToken component */}
               
               {/* Other pages */}
               <Route path="subscribers" element={<ComingSoon title="Subscribers" description="Manage your newsletter subscribers." />} />
