@@ -123,7 +123,6 @@ const InvestorsList = () => {
         <TableHeader>
           <TableRow>
             <TableHead>Wallet Address</TableHead>
-            <TableHead>Country</TableHead>
             <TableHead className="text-right">Amount</TableHead>
             <TableHead className="text-right">Tokens</TableHead>
             <TableHead>Date</TableHead>
@@ -136,7 +135,6 @@ const InvestorsList = () => {
               <TableCell className="font-medium">
                 {truncateAddress(investor.walletAddress)}
               </TableCell>
-              <TableCell>{investor.country}</TableCell>
               <TableCell className="text-right">${investor.amountInvested.toLocaleString()}</TableCell>
               <TableCell className="text-right">{investor.tokensAllocated.toLocaleString()}</TableCell>
               <TableCell>{formatDistanceToNow(investor.date, { addSuffix: true })}</TableCell>
