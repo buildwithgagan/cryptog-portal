@@ -12,7 +12,7 @@ export type ICOStats = {
 
 export const useICOData = () => {
   // In a real app, this would fetch from an API
-  const [stats] = useState<ICOStats>({
+  const [stats, setStats] = useState<ICOStats>({
     totalTokensSold: "185.2M",
     totalInvestors: "4,218",
     totalRaised: "$5.4M",
@@ -28,9 +28,18 @@ export const useICOData = () => {
     tokenPrice: { value: 2.5, isPositive: true },
   };
 
+  // Function to update token price
+  const updateTokenPrice = (price: string) => {
+    setStats(prevStats => ({
+      ...prevStats,
+      currentTokenPrice: `$${price}`
+    }));
+  };
+
   return {
     stats,
-    trends
+    trends,
+    updateTokenPrice
   };
 };
 
