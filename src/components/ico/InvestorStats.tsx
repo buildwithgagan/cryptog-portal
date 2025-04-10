@@ -11,30 +11,36 @@ import { Banknote, Globe, TrendingUp, Users } from "lucide-react";
 
 const recentInvestors = [
   {
-    name: "John Smith",
+    walletAddress: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     country: "United States",
     amount: "$15,000",
     time: "2 days ago"
   },
   {
-    name: "Emma Johnson",
+    walletAddress: "0xf02C1c8e6114b1Dbe8937a39260b5b0a374432bB",
     country: "United Kingdom",
     amount: "$8,500",
     time: "4 days ago"
   },
   {
-    name: "Raj Patel",
+    walletAddress: "0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB",
     country: "India",
     amount: "$5,000",
     time: "1 week ago"
   },
   {
-    name: "Liu Wei",
+    walletAddress: "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed",
     country: "China",
     amount: "$20,000",
     time: "1 week ago"
   }
 ];
+
+// Function to truncate wallet address for display
+const truncateAddress = (address: string) => {
+  if (!address) return "";
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+};
 
 const InvestorStats = () => {
   return (
@@ -54,11 +60,11 @@ const InvestorStats = () => {
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-9 w-9 bg-primary/10">
                     <span className="text-xs font-medium">
-                      {investor.name.split(" ").map(n => n[0]).join("")}
+                      {investor.walletAddress.substring(2, 4)}
                     </span>
                   </Avatar>
                   <div>
-                    <div className="font-medium">{investor.name}</div>
+                    <div className="font-medium">{truncateAddress(investor.walletAddress)}</div>
                     <div className="text-xs text-muted-foreground">{investor.country}</div>
                   </div>
                 </div>

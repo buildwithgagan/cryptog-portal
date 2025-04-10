@@ -14,8 +14,7 @@ import { formatDistanceToNow } from "date-fns";
 // Define the investor type
 interface Investor {
   id: string;
-  name: string;
-  email: string;
+  walletAddress: string;
   country: string;
   amountInvested: number;
   tokensAllocated: number;
@@ -27,8 +26,7 @@ interface Investor {
 const investors: Investor[] = [
   {
     id: "INV-001",
-    name: "John Smith",
-    email: "john.smith@example.com",
+    walletAddress: "0x71C7656EC7ab88b098defB751B7401B5f6d8976F",
     country: "United States",
     amountInvested: 15000,
     tokensAllocated: 500000,
@@ -37,8 +35,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-002",
-    name: "Emma Johnson",
-    email: "emma.j@example.com",
+    walletAddress: "0xf02C1c8e6114b1Dbe8937a39260b5b0a374432bB",
     country: "United Kingdom",
     amountInvested: 8500,
     tokensAllocated: 283333,
@@ -47,8 +44,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-003",
-    name: "Raj Patel",
-    email: "raj.patel@example.com",
+    walletAddress: "0x4B0897b0513fdC7C541B6d9D7E929C4e5364D2dB",
     country: "India",
     amountInvested: 5000,
     tokensAllocated: 166667,
@@ -57,8 +53,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-004",
-    name: "Marie Dupont",
-    email: "marie.d@example.com",
+    walletAddress: "0x7D1AeA8138064a0229Aba5F7f5aB337C1D2F281e",
     country: "France",
     amountInvested: 12000,
     tokensAllocated: 400000,
@@ -67,8 +62,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-005",
-    name: "Hans Mueller",
-    email: "hans.m@example.com",
+    walletAddress: "0x27b1Fdb04752bBc536007a920D24aCb045561c26",
     country: "Germany",
     amountInvested: 6500,
     tokensAllocated: 216667,
@@ -77,8 +71,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-006",
-    name: "Liu Wei",
-    email: "liu.wei@example.com",
+    walletAddress: "0x5aAeb6053F3E94C9b9A09f33669435E7Ef1BeAed",
     country: "China",
     amountInvested: 20000,
     tokensAllocated: 666667,
@@ -87,8 +80,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-007",
-    name: "Carlos Rodriguez",
-    email: "carlos.r@example.com",
+    walletAddress: "0xfB6916095ca1df60bB79Ce92cE3Ea74c37c5d359",
     country: "Spain",
     amountInvested: 3500,
     tokensAllocated: 116667,
@@ -97,8 +89,7 @@ const investors: Investor[] = [
   },
   {
     id: "INV-008",
-    name: "Sophia Rossi",
-    email: "sophia.r@example.com",
+    walletAddress: "0xdbF03B407c01E7cD3CBea99509d93f8DDDC8C6FB",
     country: "Italy",
     amountInvested: 7500,
     tokensAllocated: 250000,
@@ -120,13 +111,19 @@ const getStatusColor = (status: Investor["status"]) => {
   }
 };
 
+// Function to truncate wallet address for display
+const truncateAddress = (address: string) => {
+  if (!address) return "";
+  return `${address.substring(0, 6)}...${address.substring(address.length - 4)}`;
+};
+
 const InvestorsList = () => {
   return (
     <div className="rounded-md border">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Investor</TableHead>
+            <TableHead>Wallet Address</TableHead>
             <TableHead>Country</TableHead>
             <TableHead className="text-right">Amount</TableHead>
             <TableHead className="text-right">Tokens</TableHead>
@@ -140,11 +137,15 @@ const InvestorsList = () => {
               <TableCell className="font-medium">
                 <div className="flex items-center space-x-3">
                   <Avatar className="h-8 w-8 bg-primary/10">
-                    <span className="text-xs font-medium">{investor.name.split(' ').map(n => n[0]).join('')}</span>
+                    <span className="text-xs font-medium">
+                      {investor.walletAddress.substring(2, 4)}
+                    </span>
                   </Avatar>
                   <div>
-                    <div className="font-medium">{investor.name}</div>
-                    <div className="text-xs text-muted-foreground">{investor.email}</div>
+                    <div className="font-medium">{truncateAddress(investor.walletAddress)}</div>
+                    <div className="text-xs text-muted-foreground">
+                      {investor.id}
+                    </div>
                   </div>
                 </div>
               </TableCell>
