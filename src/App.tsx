@@ -12,6 +12,7 @@ import Layout from "./components/layout/Layout";
 import Dashboard from "./pages/Dashboard";
 import Cryptog from "./pages/Cryptog";
 import ICO from "./pages/ICO";
+import ICOInvestors from "./pages/ICOInvestors"; // Added import for ICOInvestors
 import StockFantasy from "./pages/StockFantasy";
 import Users from "./pages/Users";
 import NotFound from "./pages/NotFound";
@@ -115,7 +116,7 @@ const App = () => {
               } />
               
               {/* ICO subpages */}
-              <Route path="ico/investors" element={<ComingSoon title="ICO Investors" description="Manage and track investors for your ICO." />} />
+              <Route path="ico/investors" element={<ICOInvestors />} />
               <Route path="ico/token" element={<ComingSoon title="Token Management" description="Configure and manage your token settings." />} />
               
               {/* Other pages */}
