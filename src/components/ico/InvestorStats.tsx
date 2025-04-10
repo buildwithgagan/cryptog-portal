@@ -1,5 +1,4 @@
 
-import { Avatar } from "@/components/ui/avatar";
 import {
   Card,
   CardContent,
@@ -57,16 +56,9 @@ const InvestorStats = () => {
           <div className="space-y-4">
             {recentInvestors.map((investor, index) => (
               <div key={index} className="flex items-center justify-between">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-9 w-9 bg-primary/10">
-                    <span className="text-xs font-medium">
-                      {investor.walletAddress.substring(2, 4)}
-                    </span>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">{truncateAddress(investor.walletAddress)}</div>
-                    <div className="text-xs text-muted-foreground">{investor.country}</div>
-                  </div>
+                <div>
+                  <div className="font-medium">{truncateAddress(investor.walletAddress)}</div>
+                  <div className="text-xs text-muted-foreground">{investor.country}</div>
                 </div>
                 <div className="text-right">
                   <div className="font-medium">{investor.amount}</div>

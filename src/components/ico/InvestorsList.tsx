@@ -7,7 +7,6 @@ import {
   TableHeader, 
   TableRow 
 } from "@/components/ui/table";
-import { Avatar } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { formatDistanceToNow } from "date-fns";
 
@@ -135,19 +134,7 @@ const InvestorsList = () => {
           {investors.map((investor) => (
             <TableRow key={investor.id}>
               <TableCell className="font-medium">
-                <div className="flex items-center space-x-3">
-                  <Avatar className="h-8 w-8 bg-primary/10">
-                    <span className="text-xs font-medium">
-                      {investor.walletAddress.substring(2, 4)}
-                    </span>
-                  </Avatar>
-                  <div>
-                    <div className="font-medium">{truncateAddress(investor.walletAddress)}</div>
-                    <div className="text-xs text-muted-foreground">
-                      {investor.id}
-                    </div>
-                  </div>
-                </div>
+                {truncateAddress(investor.walletAddress)}
               </TableCell>
               <TableCell>{investor.country}</TableCell>
               <TableCell className="text-right">${investor.amountInvested.toLocaleString()}</TableCell>
