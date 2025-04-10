@@ -173,26 +173,6 @@ const ICOToken = () => {
               </div>
             </CardContent>
           </Card>
-
-          <Card>
-            <CardHeader>
-              <CardTitle>Quick Actions</CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              <Button variant="outline" className="w-full justify-start" onClick={() => navigate("/ico/investors")}>
-                <CreditCard className="mr-2 h-4 w-4" />
-                View Investors
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <LineChart className="mr-2 h-4 w-4" />
-                Export Reports
-              </Button>
-              <Button variant="outline" className="w-full justify-start">
-                <Rocket className="mr-2 h-4 w-4" />
-                Start Next Phase
-              </Button>
-            </CardContent>
-          </Card>
         </div>
       </div>
     </div>
