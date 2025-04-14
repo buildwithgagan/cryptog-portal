@@ -60,13 +60,13 @@ export function DateTimePicker({ date, setDate, disabled }: DateTimePickerProps)
   };
 
   return (
-    <div className="flex gap-2">
+    <div className="flex gap-2 w-full">
       <Popover>
         <PopoverTrigger asChild>
           <Button
             variant={"outline"}
             className={cn(
-              "w-full justify-start text-left font-normal",
+              "flex-1 justify-start text-left font-normal",
               !date && "text-muted-foreground"
             )}
             disabled={disabled}
