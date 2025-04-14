@@ -18,9 +18,6 @@ import { FeeFields } from "./form-fields/FeeFields";
 import { DateTimeFields } from "./form-fields/DateTimeFields";
 import { FormFooter } from "./form-fields/FormFooter";
 
-// Export the schema for other components to use
-export { contestFormSchema } from "./schema/contestFormSchema";
-
 interface ContestFormProps {
   teams: Team[];
   onSubmit: (data: ContestFormValues) => void;

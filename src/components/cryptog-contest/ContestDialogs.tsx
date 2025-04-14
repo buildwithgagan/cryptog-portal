@@ -10,15 +10,16 @@ import {
   AlertDialog,
   AlertDialogContent,
 } from "@/components/ui/alert-dialog";
-import ContestForm, { contestFormSchema } from "@/components/cryptog-contest/ContestForm";
+import ContestForm from "@/components/cryptog-contest/ContestForm";
+import { contestFormSchema, ContestFormValues } from "@/components/cryptog-contest/schema/contestFormSchema";
 import DeleteConfirmation from "@/components/cryptog-contest/DeleteConfirmation";
 import { Team, Contest } from "@/components/cryptog-contest/types";
 import * as z from "zod";
 
 interface ContestDialogsProps {
   teams: Team[];
-  onCreateContest: (data: z.infer<typeof contestFormSchema>) => boolean;
-  onUpdateContest: (data: z.infer<typeof contestFormSchema>, contestId: string) => boolean;
+  onCreateContest: (data: ContestFormValues) => boolean;
+  onUpdateContest: (data: ContestFormValues, contestId: string) => boolean;
   onDeleteContest: (contestId: string) => boolean;
 }
 
@@ -111,6 +112,8 @@ const ContestDialogs = ({
                   teamB: editingContest.teamB.id,
                   joiningFee: editingContest.joiningFee,
                   winningPrize: editingContest.winningPrize,
+                  startDateTime: editingContest.startDateTime,
+                  endDateTime: editingContest.endDateTime,
                 }}
                 isEditing={true}
                 onCancel={() => {
