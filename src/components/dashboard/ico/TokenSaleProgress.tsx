@@ -1,10 +1,11 @@
 
 import { Card, CardContent } from "@/components/ui/card";
 import SectionHeading from "@/components/shared/SectionHeading";
-import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer } from "recharts";
+import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, TooltipProps } from "recharts";
 import { ChartContainer, ChartTooltip, ChartTooltipContent } from "@/components/ui/chart";
 import { TrendingUp } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
+import { NameType, ValueType } from "recharts/types/component/DefaultTooltipContent";
 
 // Sample data for token sale by stage
 const saleStageData = [
@@ -86,9 +87,9 @@ const TokenSaleProgress = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis tickFormatter={(value) => (value / 1000000) + "M"} />
-                  <ChartTooltip
-                    content={({ active, payload }) => {
-                      if (active && payload && payload.length) {
+                  <Tooltip
+                    content={(props: TooltipProps<ValueType, NameType>) => {
+                      if (props.active && props.payload && props.payload.length) {
                         return (
                           <ChartTooltipContent
                             className="w-[180px]"
@@ -97,7 +98,7 @@ const TokenSaleProgress = () => {
                                 <div className="flex items-center justify-between">
                                   <span className="text-xs text-muted-foreground">Tokens Sold:</span>
                                   <span className="font-medium">
-                                    {(payload[0].value / 1000000).toFixed(1)}M
+                                    {(Number(props.payload[0].value) / 1000000).toFixed(1)}M
                                   </span>
                                 </div>
                               </div>

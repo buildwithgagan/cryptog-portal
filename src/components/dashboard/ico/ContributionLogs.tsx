@@ -13,7 +13,7 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-import StatusBadge from "@/components/shared/StatusBadge";
+import StatusBadge, { Status } from "@/components/shared/StatusBadge";
 
 // Sample contribution data
 const contributionData = [
@@ -25,7 +25,7 @@ const contributionData = [
     date: "2025-04-10",
     amount: "$12,500",
     tokens: "431,034",
-    status: "confirmed",
+    status: "confirmed" as Status,
     txHash: "0xabc123def456...",
   },
   {
@@ -36,7 +36,7 @@ const contributionData = [
     date: "2025-04-09",
     amount: "$5,800",
     tokens: "200,000",
-    status: "confirmed",
+    status: "confirmed" as Status,
     txHash: "0xmno789pqr012...",
   },
   {
@@ -47,7 +47,7 @@ const contributionData = [
     date: "2025-04-08",
     amount: "$9,200",
     tokens: "317,241",
-    status: "pending",
+    status: "pending" as Status,
     txHash: "Pending confirmation",
   },
   {
@@ -58,7 +58,7 @@ const contributionData = [
     date: "2025-04-07",
     amount: "$3,400",
     tokens: "117,241",
-    status: "refunded",
+    status: "refunded" as Status,
     txHash: "0xstu456vwx789...",
   },
   {
@@ -69,7 +69,7 @@ const contributionData = [
     date: "2025-04-06",
     amount: "$20,000",
     tokens: "689,655",
-    status: "confirmed",
+    status: "confirmed" as Status,
     txHash: "0xdef123ghi456...",
   },
 ];
