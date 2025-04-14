@@ -1,11 +1,7 @@
 
 import { useState, useEffect } from "react";
-import StatsSection from "./stock-fantasy/StatsSection";
-import PerformanceChart from "./stock-fantasy/PerformanceChart";
-import ContestStatus from "./stock-fantasy/ContestStatus";
-import MarketInsights from "./stock-fantasy/MarketInsights";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { AreaChart, Clock } from "lucide-react";
+import { AreaChart } from "lucide-react";
 
 const DashboardStockFantasy = () => {
   const [timeLeft, setTimeLeft] = useState({
@@ -78,18 +74,6 @@ const DashboardStockFantasy = () => {
           </div>
         </CardContent>
       </Card>
-
-      {/* Stats Section */}
-      <StatsSection />
-
-      {/* Performance Chart */}
-      <PerformanceChart />
-
-      {/* Contests Section */}
-      <ContestStatus />
-
-      {/* Market Insights: Top Performing Stocks and Popular Sectors */}
-      <MarketInsights />
     </div>
   );
 };
