@@ -1,8 +1,8 @@
+
 import { useState } from "react";
 import { Card } from "@/components/ui/card";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import PageTitle from "@/components/shared/PageTitle";
-import StatusBadge from "@/components/shared/StatusBadge";
 import CryptogOverview from "@/components/cryptog/CryptogOverview";
 import CryptogAssetsList from "@/components/cryptog/CryptogAssetsList";
 import CryptogContestsList from "@/components/cryptog/CryptogContestsList";
