@@ -1,24 +1,19 @@
 
 import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
+import { ReactNode } from "react";
 
 interface SectionHeadingProps {
   title: string;
   description?: string;
   className?: string;
-  icon?: LucideIcon;
+  icon?: ReactNode;
 }
 
-const SectionHeading = ({
-  title,
-  description,
-  className,
-  icon: Icon,
-}: SectionHeadingProps) => {
+const SectionHeading = ({ title, description, className, icon }: SectionHeadingProps) => {
   return (
     <div className={cn("mb-6", className)}>
       <div className="flex items-center gap-2">
-        {Icon && <Icon className="text-muted-foreground h-5 w-5" />}
+        {icon && <div className="text-muted-foreground">{icon}</div>}
         <h2 className="text-xl font-semibold">{title}</h2>
       </div>
       {description && (

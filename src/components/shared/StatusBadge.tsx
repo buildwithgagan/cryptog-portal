@@ -1,36 +1,28 @@
 
 import { cn } from "@/lib/utils";
 
-export type Status = "pending" | "confirmed" | "rejected" | "refunded" | "approved";
+type Status = "pending" | "active" | "completed" | "canceled" | "approved" | "rejected";
 
 interface StatusBadgeProps {
   status: Status;
   className?: string;
 }
 
-const StatusBadge = ({ status, className }: StatusBadgeProps) => {
-  const getStatusStyles = () => {
-    switch (status) {
-      case "confirmed":
-        return "bg-green-100 text-green-800 border-green-200";
-      case "pending":
-        return "bg-yellow-100 text-yellow-800 border-yellow-200";
-      case "rejected":
-        return "bg-red-100 text-red-800 border-red-200";
-      case "refunded":
-        return "bg-blue-100 text-blue-800 border-blue-200";
-      case "approved":
-        return "bg-green-100 text-green-800 border-green-200";
-      default:
-        return "bg-gray-100 text-gray-800 border-gray-200";
-    }
-  };
+const statusStyles: Record<Status, string> = {
+  pending: "bg-yellow-100 text-yellow-800 border-yellow-200",
+  active: "bg-blue-100 text-blue-800 border-blue-200",
+  completed: "bg-green-100 text-green-800 border-green-200",
+  canceled: "bg-red-100 text-red-800 border-red-200",
+  approved: "bg-emerald-100 text-emerald-800 border-emerald-200",
+  rejected: "bg-rose-100 text-rose-800 border-rose-200"
+};
 
+const StatusBadge = ({ status, className }: StatusBadgeProps) => {
   return (
-    <span
+    <span 
       className={cn(
-        "px-2.5 py-0.5 rounded-full text-xs font-medium border",
-        getStatusStyles(),
+        "inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium border",
+        statusStyles[status],
         className
       )}
     >

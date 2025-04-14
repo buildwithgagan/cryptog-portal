@@ -26,7 +26,7 @@ const SystemNotifications = () => {
       <SectionHeading 
         title="Notifications & Alerts" 
         description="System alerts and notifications"
-        icon={Bell}
+        icon={<Bell className="h-5 w-5" />}
       />
       
       <div className="space-y-4">

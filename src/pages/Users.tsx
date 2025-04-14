@@ -1,3 +1,4 @@
+
 import { Check, DownloadCloud, Filter, Mail, Search, Shield, ShieldAlert, User } from "lucide-react";
 import { Card } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -11,29 +12,26 @@ import {
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import PageTitle from "@/components/shared/PageTitle";
-import StatusBadge, { Status } from "@/components/shared/StatusBadge";
+import StatusBadge from "@/components/shared/StatusBadge";
 import { useState } from "react";
-
-// User status type based on the StatusBadge component
-type UserStatus = Extract<Status, "approved" | "pending" | "rejected">;
 
 // Dummy user data
 const usersData = [
-  { id: 1, name: "John Doe", email: "john@example.com", joined: "May 12, 2023", status: "approved" as UserStatus, contests: 12, totalSpent: "$240.00" },
-  { id: 2, name: "Sarah Smith", email: "sarah@example.com", joined: "May 15, 2023", status: "pending" as UserStatus, contests: 0, totalSpent: "$0.00" },
-  { id: 3, name: "Robert Johnson", email: "robert@example.com", joined: "May 18, 2023", status: "approved" as UserStatus, contests: 5, totalSpent: "$85.00" },
-  { id: 4, name: "Amanda Lee", email: "amanda@example.com", joined: "May 20, 2023", status: "rejected" as UserStatus, contests: 0, totalSpent: "$0.00" },
-  { id: 5, name: "Michael Brown", email: "michael@example.com", joined: "May 22, 2023", status: "approved" as UserStatus, contests: 8, totalSpent: "$160.00" },
-  { id: 6, name: "Emily Wilson", email: "emily@example.com", joined: "May 23, 2023", status: "approved" as UserStatus, contests: 3, totalSpent: "$45.00" },
-  { id: 7, name: "David Miller", email: "david@example.com", joined: "May 25, 2023", status: "pending" as UserStatus, contests: 0, totalSpent: "$0.00" },
-  { id: 8, name: "Sophie Taylor", email: "sophie@example.com", joined: "May 27, 2023", status: "approved" as UserStatus, contests: 1, totalSpent: "$15.00" },
-  { id: 9, name: "James Wilson", email: "james@example.com", joined: "May 28, 2023", status: "approved" as UserStatus, contests: 2, totalSpent: "$30.00" },
-  { id: 10, name: "Olivia Davis", email: "olivia@example.com", joined: "May 30, 2023", status: "pending" as UserStatus, contests: 0, totalSpent: "$0.00" },
-  { id: 11, name: "Daniel Smith", email: "daniel@example.com", joined: "Jun 1, 2023", status: "approved" as UserStatus, contests: 6, totalSpent: "$120.00" },
-  { id: 12, name: "Emma Johnson", email: "emma@example.com", joined: "Jun 3, 2023", status: "approved" as UserStatus, contests: 4, totalSpent: "$70.00" },
-  { id: 13, name: "Alex Williams", email: "alex@example.com", joined: "Jun 5, 2023", status: "rejected" as UserStatus, contests: 0, totalSpent: "$0.00" },
-  { id: 14, name: "Jessica Brown", email: "jessica@example.com", joined: "Jun 7, 2023", status: "approved" as UserStatus, contests: 7, totalSpent: "$140.00" },
-  { id: 15, name: "Ryan Davis", email: "ryan@example.com", joined: "Jun 9, 2023", status: "pending" as UserStatus, contests: 0, totalSpent: "$0.00" },
+  { id: 1, name: "John Doe", email: "john@example.com", joined: "May 12, 2023", status: "approved" as const, contests: 12, totalSpent: "$240.00" },
+  { id: 2, name: "Sarah Smith", email: "sarah@example.com", joined: "May 15, 2023", status: "pending" as const, contests: 0, totalSpent: "$0.00" },
+  { id: 3, name: "Robert Johnson", email: "robert@example.com", joined: "May 18, 2023", status: "approved" as const, contests: 5, totalSpent: "$85.00" },
+  { id: 4, name: "Amanda Lee", email: "amanda@example.com", joined: "May 20, 2023", status: "rejected" as const, contests: 0, totalSpent: "$0.00" },
+  { id: 5, name: "Michael Brown", email: "michael@example.com", joined: "May 22, 2023", status: "approved" as const, contests: 8, totalSpent: "$160.00" },
+  { id: 6, name: "Emily Wilson", email: "emily@example.com", joined: "May 23, 2023", status: "approved" as const, contests: 3, totalSpent: "$45.00" },
+  { id: 7, name: "David Miller", email: "david@example.com", joined: "May 25, 2023", status: "pending" as const, contests: 0, totalSpent: "$0.00" },
+  { id: 8, name: "Sophie Taylor", email: "sophie@example.com", joined: "May 27, 2023", status: "approved" as const, contests: 1, totalSpent: "$15.00" },
+  { id: 9, name: "James Wilson", email: "james@example.com", joined: "May 28, 2023", status: "approved" as const, contests: 2, totalSpent: "$30.00" },
+  { id: 10, name: "Olivia Davis", email: "olivia@example.com", joined: "May 30, 2023", status: "pending" as const, contests: 0, totalSpent: "$0.00" },
+  { id: 11, name: "Daniel Smith", email: "daniel@example.com", joined: "Jun 1, 2023", status: "approved" as const, contests: 6, totalSpent: "$120.00" },
+  { id: 12, name: "Emma Johnson", email: "emma@example.com", joined: "Jun 3, 2023", status: "approved" as const, contests: 4, totalSpent: "$70.00" },
+  { id: 13, name: "Alex Williams", email: "alex@example.com", joined: "Jun 5, 2023", status: "rejected" as const, contests: 0, totalSpent: "$0.00" },
+  { id: 14, name: "Jessica Brown", email: "jessica@example.com", joined: "Jun 7, 2023", status: "approved" as const, contests: 7, totalSpent: "$140.00" },
+  { id: 15, name: "Ryan Davis", email: "ryan@example.com", joined: "Jun 9, 2023", status: "pending" as const, contests: 0, totalSpent: "$0.00" },
 ];
 
 const Users = () => {
