@@ -27,7 +27,7 @@ const UserInsights = () => {
       <SectionHeading 
         title="User Insights" 
         description="User statistics and performance metrics"
-        icon={<Users className="h-5 w-5" />}
+        icon={Users}
       />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

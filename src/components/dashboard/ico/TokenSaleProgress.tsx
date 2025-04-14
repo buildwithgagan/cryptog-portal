@@ -49,9 +49,8 @@ const chartConfig = {
 const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) => {
   if (active && payload && payload.length) {
     return (
-      <ChartTooltipContent
-        className="w-[180px]"
-        content={
+      <ChartTooltip>
+        <ChartTooltipContent>
           <div>
             <div className="flex items-center justify-between">
               <span className="text-xs text-muted-foreground">Tokens Sold:</span>
@@ -60,8 +59,8 @@ const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) =
               </span>
             </div>
           </div>
-        }
-      />
+        </ChartTooltipContent>
+      </ChartTooltip>
     );
   }
   return null;
@@ -108,7 +107,7 @@ const TokenSaleProgress = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis tickFormatter={(value) => (value / 1000000) + "M"} />
-                  <Tooltip content={CustomTooltip} />
+                  <Tooltip content={<CustomTooltip />} />
                   <Legend />
                   <Bar dataKey="tokens" name="Tokens Sold" fill="#8B5CF6" />
                 </BarChart>
