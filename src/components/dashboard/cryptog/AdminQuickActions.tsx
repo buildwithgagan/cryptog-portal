@@ -10,7 +10,7 @@ const AdminQuickActions = () => {
       <SectionHeading 
         title="Quick Actions" 
         description="Admin shortcuts"
-        icon={<Flag className="h-5 w-5" />}
+        icon={Flag}
       />
       
       <div className="grid grid-cols-2 gap-4">

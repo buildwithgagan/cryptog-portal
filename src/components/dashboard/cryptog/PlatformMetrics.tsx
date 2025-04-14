@@ -28,7 +28,7 @@ const PlatformMetrics = () => {
       <SectionHeading 
         title="Platform Usage Metrics" 
         description="Contest and platform statistics"
-        icon={<BarChart3 className="h-5 w-5" />}
+        icon={BarChart3}
       />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">

@@ -9,7 +9,12 @@ interface SectionHeadingProps {
   icon?: LucideIcon;
 }
 
-const SectionHeading = ({ title, description, className, icon: Icon, }: SectionHeadingProps) => {
+const SectionHeading = ({
+  title,
+  description,
+  className,
+  icon: Icon,
+}: SectionHeadingProps) => {
   return (
     <div className={cn("mb-6", className)}>
       <div className="flex items-center gap-2">

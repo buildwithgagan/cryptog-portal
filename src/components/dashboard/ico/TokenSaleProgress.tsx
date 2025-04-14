@@ -46,6 +46,27 @@ const chartConfig = {
   tokens: { label: "Tokens Sold", color: "#8B5CF6" }
 };
 
+const CustomTooltip = ({ active, payload }: TooltipProps<ValueType, NameType>) => {
+  if (active && payload && payload.length) {
+    return (
+      <ChartTooltipContent
+        className="w-[180px]"
+        content={
+          <div>
+            <div className="flex items-center justify-between">
+              <span className="text-xs text-muted-foreground">Tokens Sold:</span>
+              <span className="font-medium">
+                {(Number(payload[0].value) / 1000000).toFixed(1)}M
+              </span>
+            </div>
+          </div>
+        }
+      />
+    );
+  }
+  return null;
+};
+
 const TokenSaleProgress = () => {
   return (
     <Card className="p-5">
@@ -87,28 +108,7 @@ const TokenSaleProgress = () => {
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="month" />
                   <YAxis tickFormatter={(value) => (value / 1000000) + "M"} />
-                  <Tooltip
-                    content={(props: TooltipProps<ValueType, NameType>) => {
-                      if (props.active && props.payload && props.payload.length) {
-                        return (
-                          <ChartTooltipContent
-                            className="w-[180px]"
-                            content={
-                              <div>
-                                <div className="flex items-center justify-between">
-                                  <span className="text-xs text-muted-foreground">Tokens Sold:</span>
-                                  <span className="font-medium">
-                                    {(Number(props.payload[0].value) / 1000000).toFixed(1)}M
-                                  </span>
-                                </div>
-                              </div>
-                            }
-                          />
-                        );
-                      }
-                      return null;
-                    }}
-                  />
+                  <Tooltip content={CustomTooltip} />
                   <Legend />
                   <Bar dataKey="tokens" name="Tokens Sold" fill="#8B5CF6" />
                 </BarChart>

@@ -1,7 +1,7 @@
 
 import { cn } from "@/lib/utils";
 
-export type Status = "pending" | "confirmed" | "rejected" | "refunded";
+export type Status = "pending" | "confirmed" | "rejected" | "refunded" | "approved";
 
 interface StatusBadgeProps {
   status: Status;
@@ -19,6 +19,8 @@ const StatusBadge = ({ status, className }: StatusBadgeProps) => {
         return "bg-red-100 text-red-800 border-red-200";
       case "refunded":
         return "bg-blue-100 text-blue-800 border-blue-200";
+      case "approved":
+        return "bg-green-100 text-green-800 border-green-200";
       default:
         return "bg-gray-100 text-gray-800 border-gray-200";
     }

@@ -32,7 +32,7 @@ const FinancialAnalytics = () => {
       <SectionHeading 
         title="Financial Analytics" 
         description="Platform revenue and token statistics"
-        icon={<DollarSign className="h-5 w-5" />}
+        icon={DollarSign}
       />
       
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
